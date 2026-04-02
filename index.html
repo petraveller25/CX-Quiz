@@ -1,3 +1,47 @@
+<!--
+  ============================================================
+  FIREBASE SETUP INSTRUCTIONS
+  ============================================================
+
+  To enable Google Sign-In and cross-device progress sync:
+
+  1. Go to https://console.firebase.google.com
+  2. Click "Add project" (or "Create a project")
+     - Name it anything (e.g., "cx-captain-quiz")
+     - You can disable Google Analytics (not needed)
+  3. Enable Authentication:
+     - Go to Build > Authentication > Get Started
+     - Click "Sign-in method" tab
+     - Enable "Google" provider
+     - Set a support email and click Save
+  4. Enable Firestore Database:
+     - Go to Build > Firestore Database > Create database
+     - Choose "Start in test mode" (or production mode with rules below)
+     - Select a region close to you
+  5. Register a Web App:
+     - Go to Project Settings (gear icon) > General
+     - Under "Your apps", click the web icon (</>)
+     - Name it (e.g., "quiz-web") — no need to enable Hosting
+     - Copy the firebaseConfig object
+  6. Replace the placeholder config in the FIREBASE_CONFIG section below
+     (search for "REPLACE_WITH_YOUR" in this file)
+  7. (Optional) Set Firestore Security Rules to:
+
+     rules_version = '2';
+     service cloud.firestore {
+       match /databases/{database}/documents {
+         match /users/{userId}/progress/{doc} {
+           allow read, write: if request.auth != null && request.auth.uid == userId;
+         }
+       }
+     }
+
+  8. If hosting this file on a domain, add that domain to:
+     Authentication > Settings > Authorized domains
+     (localhost and 127.0.0.1 are already authorized)
+
+  ============================================================
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,6 +127,34 @@ body {
 .stat-dot.yellow { background: var(--yellow); }
 .stat-dot.red { background: var(--red); }
 
+/* User info in header */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+}
+
+.user-name {
+  font-size: 12px;
+  color: var(--text-dim);
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .user-name { display: none; }
+}
+
 /* Main Container */
 .container {
   max-width: 800px;
@@ -94,6 +166,122 @@ body {
 /* Views */
 .view { display: none; }
 .view.active { display: block; }
+
+/* Login Screen */
+.login-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.login-logo {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.login-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+
+.login-title span { color: var(--accent); }
+
+.login-subtitle {
+  font-size: 15px;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+.google-signin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  color: #3c4043;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.google-signin-btn:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  transform: translateY(-1px);
+}
+
+.google-signin-btn:active {
+  transform: scale(0.97);
+}
+
+.google-signin-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.login-skip {
+  margin-top: 24px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.login-skip:hover {
+  border-color: var(--text-dim);
+  color: var(--text);
+}
+
+.login-note {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--text-dim);
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+.sync-status {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.sync-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.sync-dot.offline {
+  background: var(--yellow);
+}
+
+.sync-dot.syncing {
+  background: var(--accent);
+  animation: pulse 1s infinite;
+}
 
 /* Menu */
 .menu-grid {
@@ -488,59 +676,91 @@ body {
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
+<!-- Login Screen (shown before auth) -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-logo">&#9992;&#65039;</div>
+  <div class="login-title"><span>CX</span> Captain Upgrade</div>
+  <div class="login-subtitle">200 flashcards for your command upgrade.<br>Sign in to sync progress across devices.</div>
+  <button class="google-signin-btn" id="googleSignInBtn" onclick="signInWithGoogle()">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+    </svg>
+    Sign in with Google
+  </button>
+  <button class="login-skip" onclick="skipSignIn()">Continue without signing in</button>
+  <div class="login-note">Without sign-in, progress is saved only on this device/browser.</div>
+</div>
+
+<!-- Header (hidden until authenticated/skipped) -->
+<div class="header" id="mainHeader" style="display:none">
   <div class="header-inner">
     <div class="logo"><span>CX</span> Captain Upgrade</div>
-    <div class="stats-bar" id="statsBar">
-      <div class="stat"><div class="stat-dot green"></div><span id="statStrong">0</span></div>
-      <div class="stat"><div class="stat-dot yellow"></div><span id="statLearning">0</span></div>
-      <div class="stat"><div class="stat-dot red"></div><span id="statWeak">0</span></div>
+    <div style="display:flex;align-items:center">
+      <div class="stats-bar" id="statsBar">
+        <div class="stat"><div class="stat-dot green"></div><span id="statStrong">0</span></div>
+        <div class="stat"><div class="stat-dot yellow"></div><span id="statLearning">0</span></div>
+        <div class="stat"><div class="stat-dot red"></div><span id="statWeak">0</span></div>
+      </div>
+      <div class="sync-status" id="syncStatus" style="display:none">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncLabel">Synced</span>
+      </div>
+      <div class="user-info" id="userInfo" style="display:none">
+        <img class="user-avatar" id="userAvatar" src="" alt="">
+        <span class="user-name" id="userName"></span>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="container">
+<div class="container" id="mainContainer" style="display:none">
 
   <!-- HOME VIEW -->
   <div class="view active" id="homeView">
     <div class="menu-grid">
       <div class="menu-card" onclick="startFlashcards()">
-        <div class="icon">📇</div>
+        <div class="icon">&#128195;</div>
         <h3>Flashcards</h3>
         <p>Study cards, tap to reveal, self-rate</p>
       </div>
       <div class="menu-card" onclick="startQuiz()">
-        <div class="icon">📝</div>
+        <div class="icon">&#128221;</div>
         <h3>Quiz</h3>
         <p>Type answers, compare, get scored</p>
       </div>
       <div class="menu-card" onclick="startWeakReview()">
-        <div class="icon">🔴</div>
+        <div class="icon">&#128308;</div>
         <h3>Weak Review</h3>
         <p>Focus on cards you missed</p>
       </div>
       <div class="menu-card" onclick="showSections()">
-        <div class="icon">📂</div>
+        <div class="icon">&#128194;</div>
         <h3>Section Drill</h3>
         <p>Drill a specific topic area</p>
       </div>
       <div class="menu-card" onclick="showProgress()">
-        <div class="icon">📊</div>
+        <div class="icon">&#128202;</div>
         <h3>Progress</h3>
         <p>See your stats by section</p>
       </div>
       <div class="menu-card" onclick="resetProgress()">
-        <div class="icon">🔄</div>
+        <div class="icon">&#128260;</div>
         <h3>Reset</h3>
         <p>Clear all progress, start fresh</p>
       </div>
+    </div>
+    <div style="margin-top:16px;text-align:center">
+      <button id="signOutBtn" onclick="signOutUser()" style="display:none;background:none;border:1px solid var(--border);color:var(--text-dim);border-radius:10px;padding:8px 20px;font-size:13px;font-family:inherit;cursor:pointer">Sign Out</button>
+      <button id="signInPromptBtn" onclick="showLoginScreen()" style="display:none;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:10px;padding:8px 20px;font-size:13px;font-family:inherit;cursor:pointer">Sign in to sync progress</button>
     </div>
   </div>
 
   <!-- SECTION SELECT VIEW -->
   <div class="view" id="sectionView">
-    <button class="btn-back" onclick="goHome()">← Back</button>
+    <button class="btn-back" onclick="goHome()">&#8592; Back</button>
     <h2 style="font-size:20px;margin-bottom:4px">Choose Section</h2>
     <p style="font-size:13px;color:var(--text-dim)">Select a topic to drill</p>
     <div class="section-list" id="sectionList"></div>
@@ -548,7 +768,7 @@ body {
 
   <!-- FLASHCARD VIEW -->
   <div class="view" id="flashcardView">
-    <button class="btn-back" onclick="goHome()">← Back</button>
+    <button class="btn-back" onclick="goHome()">&#8592; Back</button>
     <div class="card-counter" id="cardCounter">1 / 20</div>
     <div class="progress-bar-full"><div class="fill" id="cardProgress" style="width:0%"></div></div>
     <div class="flashcard-container">
@@ -560,15 +780,15 @@ body {
       </div>
     </div>
     <div class="rating-bar" id="ratingBar">
-      <button class="rate-btn got-it" onclick="rateCard(1)">✓ Got it</button>
+      <button class="rate-btn got-it" onclick="rateCard(1)">&#10003; Got it</button>
       <button class="rate-btn partial" onclick="rateCard(2)">~ Partial</button>
-      <button class="rate-btn missed" onclick="rateCard(3)">✗ Missed</button>
+      <button class="rate-btn missed" onclick="rateCard(3)">&#10007; Missed</button>
     </div>
   </div>
 
   <!-- QUIZ VIEW -->
   <div class="view" id="quizView">
-    <button class="btn-back" onclick="goHome()">← Back</button>
+    <button class="btn-back" onclick="goHome()">&#8592; Back</button>
     <div class="card-counter" id="quizCounter">1 / 20</div>
     <div class="progress-bar-full"><div class="fill" id="quizProgress" style="width:0%"></div></div>
     <div class="flashcard" style="cursor:default;margin-top:20px">
@@ -583,16 +803,16 @@ body {
         <div id="quizCorrectAnswer" style="font-size:15px;line-height:1.5"></div>
       </div>
       <div class="rating-bar visible" style="margin-top:12px">
-        <button class="rate-btn got-it" onclick="quizRate(1)">✓ Correct</button>
+        <button class="rate-btn got-it" onclick="quizRate(1)">&#10003; Correct</button>
         <button class="rate-btn partial" onclick="quizRate(2)">~ Partial</button>
-        <button class="rate-btn missed" onclick="quizRate(3)">✗ Wrong</button>
+        <button class="rate-btn missed" onclick="quizRate(3)">&#10007; Wrong</button>
       </div>
     </div>
   </div>
 
   <!-- RESULTS VIEW -->
   <div class="view" id="resultsView">
-    <button class="btn-back" onclick="goHome()">← Back</button>
+    <button class="btn-back" onclick="goHome()">&#8592; Back</button>
     <div class="result-card">
       <div class="result-label">Session Complete</div>
       <div class="result-score" id="resultScore">0%</div>
@@ -604,7 +824,7 @@ body {
 
   <!-- PROGRESS VIEW -->
   <div class="view" id="progressView">
-    <button class="btn-back" onclick="goHome()">← Back</button>
+    <button class="btn-back" onclick="goHome()">&#8592; Back</button>
     <h2 style="font-size:20px;margin-bottom:4px">Progress Report</h2>
     <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px" id="progressSummary"></p>
     <div id="progressSections"></div>
@@ -613,7 +833,289 @@ body {
 
 </div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
 <script>
+// ============================================================
+// FIREBASE CONFIG — REPLACE WITH YOUR OWN VALUES
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDrk6GGC4BFMPSAMILL1m8lMrFKzecEIHQ",
+  authDomain: "cx-quiz-681a1.firebaseapp.com",
+  projectId: "cx-quiz-681a1",
+  storageBucket: "cx-quiz-681a1.firebasestorage.app",
+  messagingSenderId: "1091357559577",
+  appId: "1:1091357559577:web:f5bc7316862f5a0a101388"
+};
+
+// ============================================================
+// FIREBASE INITIALIZATION
+// ============================================================
+let firebaseApp = null;
+let auth = null;
+let db = null;
+let currentUser = null;
+let firebaseReady = false;
+let syncPending = false;
+
+function isFirebaseConfigured() {
+  return firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('REPLACE_WITH');
+}
+
+if (isFirebaseConfigured()) {
+  try {
+    firebaseApp = firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+    // Enable offline persistence
+    db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
+      if (err.code === 'failed-precondition') {
+        // Multiple tabs open, persistence can only be enabled in one tab at a time
+        console.warn('Firestore persistence failed: multiple tabs open');
+      } else if (err.code === 'unimplemented') {
+        console.warn('Firestore persistence not available in this browser');
+      }
+    });
+    firebaseReady = true;
+  } catch (e) {
+    console.error('Firebase init error:', e);
+    firebaseReady = false;
+  }
+}
+
+// ============================================================
+// AUTH FUNCTIONS
+// ============================================================
+function signInWithGoogle() {
+  if (!firebaseReady) {
+    alert('Firebase is not configured yet. Please follow the setup instructions in the HTML source comments to add your Firebase config.');
+    return;
+  }
+  var provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).then(function(result) {
+    // Auth state listener handles the rest
+  }).catch(function(error) {
+    if (error.code === 'auth/popup-blocked') {
+      // Fallback to redirect
+      auth.signInWithRedirect(provider);
+    } else if (error.code !== 'auth/popup-closed-by-user') {
+      alert('Sign-in error: ' + error.message);
+    }
+  });
+}
+
+function signOutUser() {
+  if (auth) {
+    auth.signOut().then(function() {
+      currentUser = null;
+      showLoginScreen();
+    });
+  } else {
+    currentUser = null;
+    showLoginScreen();
+  }
+}
+
+function skipSignIn() {
+  currentUser = null;
+  enterApp();
+}
+
+function showLoginScreen() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainHeader').style.display = 'none';
+  document.getElementById('mainContainer').style.display = 'none';
+}
+
+function enterApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainHeader').style.display = '';
+  document.getElementById('mainContainer').style.display = '';
+
+  if (currentUser) {
+    // Show user info
+    document.getElementById('userInfo').style.display = 'flex';
+    document.getElementById('userAvatar').src = currentUser.photoURL || '';
+    document.getElementById('userName').textContent = currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'User';
+    document.getElementById('signOutBtn').style.display = '';
+    document.getElementById('signInPromptBtn').style.display = 'none';
+    document.getElementById('syncStatus').style.display = 'flex';
+    updateSyncStatus('synced');
+  } else {
+    document.getElementById('userInfo').style.display = 'none';
+    document.getElementById('signOutBtn').style.display = 'none';
+    document.getElementById('signInPromptBtn').style.display = '';
+    document.getElementById('syncStatus').style.display = 'none';
+  }
+
+  parseCardsFromPage();
+
+  if (currentUser && firebaseReady) {
+    loadProgressFromFirestore().then(function() {
+      updateStats();
+    });
+  } else {
+    updateStats();
+  }
+}
+
+function updateSyncStatus(state) {
+  var dot = document.getElementById('syncDot');
+  var label = document.getElementById('syncLabel');
+  if (!dot || !label) return;
+  dot.className = 'sync-dot';
+  if (state === 'syncing') {
+    dot.classList.add('syncing');
+    label.textContent = 'Syncing...';
+  } else if (state === 'offline') {
+    dot.classList.add('offline');
+    label.textContent = 'Offline';
+  } else {
+    label.textContent = 'Synced';
+  }
+}
+
+// Listen for auth state changes
+if (firebaseReady) {
+  auth.onAuthStateChanged(function(user) {
+    if (user) {
+      currentUser = user;
+      enterApp();
+    }
+  });
+  // Handle redirect result (for popup-blocked fallback)
+  auth.getRedirectResult().catch(function() {});
+}
+
+// Online/offline detection
+window.addEventListener('online', function() {
+  if (currentUser && firebaseReady) {
+    updateSyncStatus('syncing');
+    syncLocalToFirestore().then(function() {
+      updateSyncStatus('synced');
+    });
+  }
+});
+
+window.addEventListener('offline', function() {
+  if (currentUser) {
+    updateSyncStatus('offline');
+  }
+});
+
+// ============================================================
+// FIRESTORE SYNC FUNCTIONS
+// ============================================================
+function getProgressDocRef() {
+  if (!currentUser || !db) return null;
+  return db.collection('users').doc(currentUser.uid).collection('progress').doc('data');
+}
+
+function saveProgressToFirestore(progressData) {
+  var ref = getProgressDocRef();
+  if (!ref) return Promise.resolve();
+
+  updateSyncStatus('syncing');
+  return ref.set({
+    attempts: progressData.attempts || {},
+    strong: progressData.strong || [],
+    weak: progressData.weak || [],
+    lastSession: progressData.lastSession || new Date().toISOString(),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge: true }).then(function() {
+    updateSyncStatus(navigator.onLine ? 'synced' : 'offline');
+  }).catch(function(err) {
+    console.error('Firestore save error:', err);
+    updateSyncStatus('offline');
+  });
+}
+
+function loadProgressFromFirestore() {
+  var ref = getProgressDocRef();
+  if (!ref) return Promise.resolve();
+
+  updateSyncStatus('syncing');
+  return ref.get().then(function(doc) {
+    if (doc.exists) {
+      var firestoreData = doc.data();
+      var localData = loadProgressFromLocalStorage();
+
+      // Merge: Firestore is primary, but we merge any local-only data
+      var merged = mergeProgress(firestoreData, localData);
+
+      // Save merged data back to both stores
+      localStorage.setItem('cx_quiz_progress', JSON.stringify(merged));
+      // Save back to Firestore if merge produced changes
+      if (JSON.stringify(merged) !== JSON.stringify(firestoreData)) {
+        return saveProgressToFirestore(merged);
+      }
+    } else {
+      // No Firestore data yet -- push local data up
+      var localData = loadProgressFromLocalStorage();
+      if (Object.keys(localData.attempts).length > 0) {
+        return saveProgressToFirestore(localData);
+      }
+    }
+    updateSyncStatus(navigator.onLine ? 'synced' : 'offline');
+  }).catch(function(err) {
+    console.error('Firestore load error:', err);
+    updateSyncStatus('offline');
+  });
+}
+
+function syncLocalToFirestore() {
+  var localData = loadProgressFromLocalStorage();
+  if (Object.keys(localData.attempts).length === 0) return Promise.resolve();
+  return saveProgressToFirestore(localData);
+}
+
+function mergeProgress(firestoreData, localData) {
+  var merged = {
+    attempts: {},
+    strong: [],
+    weak: [],
+    lastSession: null
+  };
+
+  // Merge attempts: take the higher count for each card
+  var allIds = new Set(Object.keys(firestoreData.attempts || {}).concat(Object.keys(localData.attempts || {})));
+  allIds.forEach(function(id) {
+    var fsCount = (firestoreData.attempts && firestoreData.attempts[id]) || 0;
+    var localCount = (localData.attempts && localData.attempts[id]) || 0;
+    merged.attempts[id] = Math.max(fsCount, localCount);
+  });
+
+  // For strong/weak: Firestore is authoritative if it has data,
+  // but also include any local-only cards
+  var fsStrong = new Set(firestoreData.strong || []);
+  var fsWeak = new Set(firestoreData.weak || []);
+  var localStrong = new Set(localData.strong || []);
+  var localWeak = new Set(localData.weak || []);
+
+  // Cards that are in Firestore keep their Firestore classification.
+  // Cards only in local get their local classification.
+  allIds.forEach(function(id) {
+    var inFs = (firestoreData.attempts && firestoreData.attempts[id]) ? true : false;
+    if (inFs) {
+      if (fsStrong.has(id)) merged.strong.push(id);
+      else if (fsWeak.has(id)) merged.weak.push(id);
+    } else {
+      if (localStrong.has(id)) merged.strong.push(id);
+      else if (localWeak.has(id)) merged.weak.push(id);
+    }
+  });
+
+  // Use the more recent lastSession
+  var fsDate = firestoreData.lastSession ? new Date(firestoreData.lastSession) : new Date(0);
+  var localDate = localData.lastSession ? new Date(localData.lastSession) : new Date(0);
+  merged.lastSession = fsDate > localDate ? firestoreData.lastSession : localData.lastSession;
+
+  return merged;
+}
+
 // ===== FLASHCARD DATA =====
 const SECTIONS = {
   A: "PIC Authority & Operational Control",
@@ -638,6 +1140,7 @@ let currentMode = "flashcard"; // flashcard or quiz
 const FLASHCARD_MD = `PLACEHOLDER`;
 
 function parseCardsFromPage() {
+  if (allCards.length > 0) return; // already parsed
   // Fetch the markdown file or use embedded data
   const text = document.getElementById('flashcardData')?.textContent || '';
   const pattern = /\*\*([A-J]\d+)\.\*\*\s+Q:\s*(.*?)\nA:\s*(.*?)(?=\n\n|\n\*\*|$)/gs;
@@ -653,19 +1156,28 @@ function parseCardsFromPage() {
   }
 }
 
-// ===== PROGRESS MANAGEMENT (localStorage) =====
-function loadProgress() {
+// ===== PROGRESS MANAGEMENT =====
+function loadProgressFromLocalStorage() {
   try {
     return JSON.parse(localStorage.getItem('cx_quiz_progress')) || {
       attempts: {}, strong: [], weak: [], lastSession: null
     };
-  } catch { return { attempts: {}, strong: [], weak: [], lastSession: null }; }
+  } catch(e) { return { attempts: {}, strong: [], weak: [], lastSession: null }; }
+}
+
+function loadProgress() {
+  return loadProgressFromLocalStorage();
 }
 
 function saveProgress(p) {
   p.lastSession = new Date().toISOString();
   localStorage.setItem('cx_quiz_progress', JSON.stringify(p));
   updateStats();
+
+  // Sync to Firestore if signed in
+  if (currentUser && firebaseReady) {
+    saveProgressToFirestore(p);
+  }
 }
 
 function updateStats() {
@@ -715,7 +1227,7 @@ function showCard() {
     return;
   }
   const card = currentDeck[currentIndex];
-  document.getElementById('cardTag').textContent = `${card.id} — ${card.sectionName}`;
+  document.getElementById('cardTag').textContent = `${card.id} \u2014 ${card.sectionName}`;
   document.getElementById('cardQuestion').textContent = card.question;
   document.getElementById('cardAnswer').textContent = card.answer;
   document.getElementById('cardAnswer').classList.remove('visible');
@@ -772,7 +1284,7 @@ function showQuizCard() {
     return;
   }
   const card = currentDeck[currentIndex];
-  document.getElementById('quizTag').textContent = `${card.id} — ${card.sectionName}`;
+  document.getElementById('quizTag').textContent = `${card.id} \u2014 ${card.sectionName}`;
   document.getElementById('quizQuestion').textContent = card.question;
   document.getElementById('quizInput').value = '';
   document.getElementById('quizInput').focus();
@@ -842,7 +1354,7 @@ function showSections() {
       <div class="code">${code}</div>
       <div class="info">
         <div class="name">${name}</div>
-        <div class="count">${sCards.length} cards · ${strong} strong</div>
+        <div class="count">${sCards.length} cards \u00B7 ${strong} strong</div>
       </div>
       <div class="progress-mini"><div class="progress-fill" style="width:${pct}%"></div></div>
     `;
@@ -867,14 +1379,14 @@ function showResults() {
   scoreEl.style.color = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--yellow)' : 'var(--red)';
 
   const msg = document.getElementById('resultMessage');
-  if (pct >= 90) msg.textContent = 'Excellent — ready for the sim!';
-  else if (pct >= 70) msg.textContent = 'Good progress — review weak areas.';
-  else msg.textContent = 'Needs work — focus on weak cards.';
+  if (pct >= 90) msg.textContent = 'Excellent \u2014 ready for the sim!';
+  else if (pct >= 70) msg.textContent = 'Good progress \u2014 review weak areas.';
+  else msg.textContent = 'Needs work \u2014 focus on weak cards.';
   msg.style.color = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--yellow)' : 'var(--red)';
 
   const details = document.getElementById('resultDetails');
   details.innerHTML = sessionResults.map(r => {
-    const icon = r.result === 'correct' ? '✓' : r.result === 'wrong' ? '✗' : '~';
+    const icon = r.result === 'correct' ? '\u2713' : r.result === 'wrong' ? '\u2717' : '~';
     const color = r.result === 'correct' ? 'var(--green)' : r.result === 'wrong' ? 'var(--red)' : 'var(--yellow)';
     return `<div style="padding:6px 0;font-size:13px;display:flex;gap:8px;border-bottom:1px solid var(--border)">
       <span style="color:${color};font-weight:700;width:20px">${icon}</span>
@@ -891,7 +1403,7 @@ function showProgress() {
   const studied = Object.keys(p.attempts).length;
 
   document.getElementById('progressSummary').textContent =
-    `${studied}/${total} studied · ${p.strong.length} strong · ${p.weak.length} weak`;
+    `${studied}/${total} studied \u00B7 ${p.strong.length} strong \u00B7 ${p.weak.length} weak`;
 
   const container = document.getElementById('progressSections');
   container.innerHTML = '';
@@ -907,7 +1419,7 @@ function showProgress() {
     el.className = 'progress-section';
     el.innerHTML = `
       <div class="progress-section-header">
-        <div class="progress-section-name">${code} · ${name}</div>
+        <div class="progress-section-name">${code} \u00B7 ${name}</div>
         <div class="progress-section-pct" style="color:${color}">${pct}%</div>
       </div>
       <div class="progress-section-bar"><div class="fill" style="width:${pct}%;background:${color}"></div></div>
@@ -935,6 +1447,17 @@ function showProgress() {
 function resetProgress() {
   if (confirm('Reset all progress? This cannot be undone.')) {
     localStorage.removeItem('cx_quiz_progress');
+
+    // Also clear Firestore if signed in
+    if (currentUser && firebaseReady) {
+      var ref = getProgressDocRef();
+      if (ref) {
+        ref.delete().catch(function(err) {
+          console.error('Firestore delete error:', err);
+        });
+      }
+    }
+
     updateStats();
     alert('Progress reset.');
   }
@@ -958,9 +1481,18 @@ document.addEventListener('keydown', (e) => {
 
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded', () => {
-  // Load flashcard data from script tag
-  parseCardsFromPage();
-  updateStats();
+  if (!firebaseReady) {
+    // No Firebase -- skip login, go straight to app
+    // (either not configured or init failed)
+    if (!isFirebaseConfigured()) {
+      // Show login screen anyway but with a note
+      document.getElementById('loginScreen').style.display = 'flex';
+    } else {
+      skipSignIn();
+    }
+  }
+  // If Firebase is ready, auth.onAuthStateChanged will handle it
+  // If no user is signed in after a moment, the login screen stays visible
 });
 </script>
 
@@ -1064,8 +1596,8 @@ A: If landing fuel will be at or above Final Reserve Fuel.
 **B9.** Q: What is Normal Fuel Required?
 A: Destination + approach + divert to alternate + 5% contingency + 30 min hold at 1,500 ft AAL + approach/landing at alternate.
 
-**B10.** Q: What is the Final Reserve Fuel for B777-300ER?
-A: 3,500 kg.
+**B10.** Q: What is the A330 EDTO maximum diversion time?
+A: 120 / 180 minutes (Trent 700).
 
 **B11.** Q: When should you request delay information (BOX 1)?
 A: When you may land with less than Minimum Diversion Fuel.
@@ -1085,8 +1617,8 @@ A: NO — avoid to prevent fuel vapour ingestion.
 **B16.** Q: What fuel is required for depressurisation/engine shutdown planning?
 A: Continued flight to nearest adequate airport + hold at 1,500 ft for 15 min + approach and landing.
 
-**B17.** Q: What is the B747-8F Final Reserve Fuel?
-A: 4,800 kg.
+**B17.** Q: What is the A350-900 EDTO maximum diversion time?
+A: 180 / 240 minutes (Trent XWB-84).
 
 **B18.** Q: What is the EDTO critical fuel minimum remaining at ERA?
 A: 15 minutes at 1,500 ft AAL consumption rate.
@@ -1186,8 +1718,8 @@ A: 200 m.
 **D7.** Q: CAT 3B No DH TDZ RVR (Airbus, general)?
 A: 75 m.
 
-**D8.** Q: CAT 3B No DH TDZ RVR (Boeing, general)?
-A: 100 m.
+**D8.** Q: CAT 3B No DH TDZ RVR (Airbus, USA)?
+A: 300 ft.
 
 **D9.** Q: USA CAT 2 TDZ RVR?
 A: 1,200 ft.
@@ -1262,8 +1794,8 @@ A: PIC contacts MC via ACARS after 90 min and prior to EDTO entry point; AML ent
 **E11.** Q: A350-1000 max EDTO diversion distance?
 A: 1,712 NM (at 240 min).
 
-**E12.** Q: B777-300ER max EDTO diversion time?
-A: 180 / 240 minutes.
+**E12.** Q: A350-1000 max EDTO diversion time?
+A: 180 / 240 minutes (Trent XWB-97, max distance 1,712 NM).
 
 **E13.** Q: 2-engine EDTO distances are calculated at what speed?
 A: VMO/MMO, ISA, still air, OEI (drift-down credit allowed).
@@ -1271,11 +1803,11 @@ A: VMO/MMO, ISA, still air, OEI (drift-down credit allowed).
 **E14.** Q: If ERA weather deteriorates during EDTO segment, what do you do?
 A: Select another suitable ERA; remain on planned route; use nearest suitable.
 
-**E15.** Q: Is the B747-400F EDTO approved?
-A: NO (180 min threshold already covers most routes).
+**E15.** Q: A330 EDTO max diversion distance at 180 min?
+A: 1,272 NM.
 
-**E16.** Q: B747-8F max EDTO diversion time?
-A: 240 minutes.
+**E16.** Q: A350-900 EDTO max diversion distance at 240 min?
+A: 1,691 NM.
 
 **E17.** Q: What additional fuel factors apply from critical point to ERA?
 A: 5% wind contingency, aircraft performance factor, APU fuel, icing penalty, CDL/MEL penalties.
