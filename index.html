@@ -1140,6 +1140,9 @@ const SECTIONS = {
   H: "Crew Health, Security & Reporting",
   I: "A330 vs A350 Systems",
   J: "Flight Control Laws & Sim Scenarios",
+  K: "A330 Electrical System — Operations",
+  L: "A350 Electrical System — Operations",
+  M: "Electrical Failures — Sim Scenarios",
 };
 
 let allCards = [];
@@ -1155,7 +1158,7 @@ function parseCardsFromPage() {
   if (allCards.length > 0) return; // already parsed
   // Fetch the markdown file or use embedded data
   const text = document.getElementById('flashcardData')?.textContent || '';
-  const pattern = /\*\*([A-J]\d+)\.\*\*\s+Q:\s*(.*?)\nA:\s*(.*?)(?=\n\n|\n\*\*|$)/gs;
+  const pattern = /\*\*([A-Z]\d+)\.\*\*\s+Q:\s*(.*?)\nA:\s*(.*?)(?=\n\n|\n\*\*|$)/gs;
   let match;
   while ((match = pattern.exec(text)) !== null) {
     allCards.push({
@@ -1511,7 +1514,7 @@ window.addEventListener('DOMContentLoaded', () => {
 <!-- Embedded flashcard data (parsed on load) -->
 <script type="text/plain" id="flashcardData">
 # CX Captain Upgrade — Flashcards
-## 200 Questions Organized by Topic
+## 260 Questions Organized by Topic
 
 ---
 
@@ -2155,7 +2158,199 @@ A: More than 4 competencies at Minimum Acceptable (M) = Unsatisfactory.
 
 ---
 
-*200 flashcards compiled from CX FOP OPS Part A Rev 69, OMD Rev 49, FCOM/FCTM, MEL, and 125+ candidate simulator debriefs.*
+## SECTION K: A330 Electrical System — Operations (20 cards)
+
+**K1.** Q: What are the 3 AC generators on the A330?
+A: IDG 1 (Engine 1), IDG 2 (Engine 2), and APU Generator.
+
+**K2.** Q: If you disconnect an A330 IDG in flight, can it be reconnected?
+A: NO. Once disconnected in flight, an A330 IDG cannot be reconnected. This is a CSD limitation.
+
+**K3.** Q: What triggers automatic RAT deployment on the A330?
+A: Loss of AC BUS 1 AND AC BUS 2 simultaneously (all main generators + APU gen lost).
+
+**K4.** Q: What does the RAT power on the A330?
+A: RAT → Green hydraulic system → EDP (Emergency Driven Pump) → EMER GEN → AC ESS BUS + DC ESS BUS.
+
+**K5.** Q: In ELEC EMER CONFIG, who MUST be PF and why?
+A: CM1 (left seat) MUST be PF — only PFD 1 is available. Non-negotiable.
+
+**K6.** Q: What flight control law are you in during ELEC EMER CONFIG?
+A: Alternate Law — no alpha protection, no overspeed protection. Pilot must manually manage the envelope.
+
+**K7.** Q: What does the LAND RECOVERY pushbutton recover on the A330?
+A: ILS 1 (if no MMR), SFCC 1 (slat channel), and operative fuel pumps. Must be pressed BEFORE approach.
+
+**K8.** Q: After normal electrical power is restored from ELEC EMER CONFIG, are LAND RECOVERY buses automatically restored?
+A: NO. LAND RECOVERY pb must be manually pressed even after restoration. Buses remain shed until pressed.
+
+**K9.** Q: EDP-powered EMER GEN vs RAT-powered — what do you lose with RAT only?
+A: RAT loses: FMGC, ND 1, HF 1, pitch trim, rudder trim, anti-skid. Only PFD 1, VHF 1, basic nav remain.
+
+**K10.** Q: What happens at slat extension when EMER GEN is powered by RAT?
+A: EMER GEN automatically disconnects. Landing continues on batteries only with pedal braking, no anti-skid.
+
+**K11.** Q: A330 battery duration in emergency?
+A: Approximately 30 minutes at emergency load.
+
+**K12.** Q: How many batteries does the A330 have?
+A: 2 main batteries (plus APU battery). Connected to HOT BUS 1 and HOT BUS 2 (always live).
+
+**K13.** Q: What is the static inverter's role?
+A: Converts battery DC → 115V AC to power AC ESS BUS when no other AC source is available.
+
+**K14.** Q: What buses are shed in ELEC EMER CONFIG?
+A: AC ESS SHED, DC ESS SHED, AC LAND RECOVERY, and DC LAND RECOVERY buses.
+
+**K15.** Q: What are the HOT buses and when are they powered?
+A: HOT BUS 1 and HOT BUS 2 — directly connected to batteries, ALWAYS live regardless of electrical state. Power fire protection and dome light.
+
+**K16.** Q: In ELEC EMER CONFIG, should you declare MAYDAY or PAN PAN?
+A: MAYDAY. This is an extreme emergency.
+
+**K17.** Q: Landing gear in ELEC EMER CONFIG — normal or gravity extension?
+A: Gravity extension ALWAYS. NWS (Nose Wheel Steering) is lost in all cases.
+
+**K18.** Q: Can you start the APU in ELEC EMER CONFIG? When?
+A: Yes — below FL250. APU start dramatically improves the configuration. Be proactive.
+
+**K19.** Q: With EDP-powered EMER GEN, what navigation capability do you have?
+A: ND 1, FMGC, VOR 1, DME 1, ILS 1/GPS 1 (if MMR), plus VHF 1 and HF 1.
+
+**K20.** Q: The ECAM says LAND ASAP — should you land at the nearest airfield immediately?
+A: Not necessarily. Don't land at a poorly equipped airfield in marginal weather. The power source (EDP vs RAT) informs your decision on suitable airport.
+
+---
+
+## SECTION L: A350 Electrical System — Operations (20 cards)
+
+**L1.** Q: How many generators does the A350 have and what type?
+A: 4 VFGs (Variable Frequency Generators) — 2 per engine. Variable frequency 360–800 Hz, no CSD.
+
+**L2.** Q: What is the A350's total electrical generation capacity?
+A: Approximately 1.3 MW — much greater than A330 (~300 kW) due to no-bleed architecture.
+
+**L3.** Q: What is the 270V HVDC bus used for on the A350?
+A: Powers EHA (Electro-Hydrostatic Actuators) and EBHA (Electrical Backup Hydraulic Actuators) for flight controls. Does not exist on A330.
+
+**L4.** Q: What happens to APU on A350 dual engine failure?
+A: APU AUTO-STARTS automatically. This is a critical difference from A330 where APU start is a crew action.
+
+**L5.** Q: How many batteries does the A350 have?
+A: 4 batteries (vs 2 on A330). Greater redundancy.
+
+**L6.** Q: On the A350, what powers cabin pressurisation?
+A: Electrically-driven EACs (Electric Air Compressors). NO bleed air fallback — if electrical generation fails, pressurisation is affected.
+
+**L7.** Q: On the A350, what powers wing anti-ice?
+A: EWAS (Electrical Wing Anti-Ice System) — electric heating mats. NO bleed air fallback — lost if electrical fails.
+
+**L8.** Q: What powers slat actuation on the A350?
+A: Electrical motors powered by the AC EMER 1 bus. Unlike A330 where slats are hydraulically actuated.
+
+**L9.** Q: What is ELEC SIDE isolation on the A350?
+A: The A350 has 2 isolatable electrical sides (SIDE 1 and SIDE 2). During avionics smoke, the affected side is isolated to stop the smoke source.
+
+**L10.** Q: What is the critical trap with A350 ELEC SIDE isolation?
+A: Isolating one side can cause TOTAL LOSS of slat actuation or landing systems (LS 1 and LS 2). No slats = much higher approach speed and landing distance.
+
+**L11.** Q: During A350 smoke procedure, can you restore the isolated ELEC SIDE before landing?
+A: Yes — turning isolated side GENs back ON recovers slats/landing systems, but may reignite the smoke source. Captain's risk decision.
+
+**L12.** Q: A350 smoke isolation sequence for AVNCS SMOKE ECAM?
+A: Step 1: Isolate affected electrical side → Step 2: If smoke continues, isolate other side → Step 3: If persists, check air conditioning/cabin equipment.
+
+**L13.** Q: A350 smoke isolation sequence WITHOUT AVNCS SMOKE ECAM?
+A: Step 1: Isolate air conditioning/cabin equipment first → Step 2: Isolate ELEC SIDE 1 → Step 3: Isolate ELEC SIDE 2.
+
+**L14.** Q: Is the A350 RAT listed on the ECAM INOP SYS list?
+A: NO. RAT OUT memo is displayed, but it is NOT on the INOP SYS list. Crew must manually use FCOM Fuel Penalty Table.
+
+**L15.** Q: What happens to the A330 electrical system if engines are running but both IDGs fail?
+A: APU generator should be connected. If APU gen also unavailable → ELEC EMER CONFIG.
+
+**L16.** Q: On the A350, why does electrical failure have more impact than on A330?
+A: Because pressurisation (EAC), wing anti-ice (EWAS), and slat actuation are all electrically powered. On A330 these use bleed air/hydraulics — independent of electrical.
+
+**L17.** Q: MEL 24-24-01A on A350 — what is it and why does it matter?
+A: RAT Shedding Redundancy. It's a PADD item requiring Dispatch LPA. Extremely common in C3 sim phase.
+
+**L18.** Q: MEL 24-22-01A on A330 — what is it and what's the operational impact?
+A: IDG 1 Deactivated. APU must be serviceable and used throughout the flight. Budget extra fuel for APU burn.
+
+**L19.** Q: On the A350, when on battery power, what happens to cockpit seats?
+A: Electric seat adjustment is lost. Seats must be operated mechanically.
+
+**L20.** Q: In the A350 EMER EVAC procedure, what must be done with ELEC SIDE isolation before evacuation?
+A: If ELEC SIDE 1&2 ISOL pb-sw lighted ON → set ELEC SIDE 1&2 ISOL to OFF first. Then ALL 4 BATs OFF.
+
+---
+
+## SECTION M: Electrical Failures — Sim Scenarios (20 cards)
+
+**M1.** Q: T2 sim — you arrive at a dark cockpit with APU inop. What's your first action?
+A: Call engineer immediately → request external electrical power + ground air start unit. Brief ISM on delayed boarding.
+
+**M2.** Q: T2 sim — APU inop, how do you start both engines?
+A: ENG 1 with Air Start Unit (ground air) at bay → ENG 2 via crossbleed on pushback. Do NOT remove external power before ENG 2 crossbleed start.
+
+**M3.** Q: C1 sim — ACP2 fails after takeoff. What's the procedure?
+A: QRH reset table → AMU/ACP reset attempt → if unsuccessful, FCOM Audio Panel switchover: FO to RMP 3.
+
+**M4.** Q: C2 sim — Captain's Inner Display Unit fails at 500 ft after rotation. What do you do?
+A: Aviate first — take control on serviceable side. Delay ECAM actions until clean, clear of weather and terrain. Use OIS or FO side displays.
+
+**M5.** Q: C2 sim — CB trips on taxi causing XPDR/ATC fault. What do you do?
+A: Identify which CB tripped. Switch to standby transponder. Consult MEL. Coordinate with ATC about temporary loss of transponder.
+
+**M6.** Q: C2 sim — IDG 1 Inop MEL + APU also inop MEL. What's the trap?
+A: Two MELs interact — with both inop, normal electrical generation is severely compromised. Get ground power immediately. Consider keeping APU running and budget extra fuel.
+
+**M7.** Q: C3 sim — MEL 24-24-01A (RAT Shedding Redundancy). What action?
+A: It's a PADD item. Requires Dispatch LPA. Check combined effect with other MELs (e.g., AP2 inop + Ground Spoiler inop = no autoland).
+
+**M8.** Q: C2 sim — GEN 1A + GEN 2B both MEL'd. What's the candidate tip?
+A: Keep APU running throughout flight. Budget extra fuel for APU consumption. Simplicity over fuel saving.
+
+**M9.** Q: What is the electrical power-up sequence for a dark A330 cockpit?
+A: Battery ON → check voltage → request ground power → connect external power → turn on ADIRS → then proceed with cockpit preparation.
+
+**M10.** Q: C3 sim — FM1 fails in cruise, cascading to AP1+2 failure. What happens electrically?
+A: FM1 failure on an electrical bus can cascade to autopilot loss on the same bus. AP2 may recover. Use BACKUP NAV if FMS unavailable.
+
+**M11.** Q: When should you delay ECAM electrical actions after takeoff?
+A: Until aircraft is clean (flaps up), clear of weather, and terrain is safe. Priority: aviate → navigate → communicate → ECAM.
+
+**M12.** Q: C2 sim — ENG 2 won't start on ground, igniter problem. What do you do?
+A: Coordinate with engineering. Discuss options: different igniter, maintenance action, delay, or operate with reduced dispatch if MEL permits single-engine taxi to runway with crossbleed start airborne.
+
+**M13.** Q: In A330 ELEC EMER CONFIG, can CM2 access system display pages?
+A: Yes — CM2 can display SD pages on EWD by pressing and holding the associated system page pushbutton on ECP. Only one ECAM display available.
+
+**M14.** Q: What QRH reference should you check after completing ECAM in ELEC EMER CONFIG?
+A: QRH ELEC EMER CONFIG SYS REMAINING list — tells you exactly what systems you have and don't have.
+
+**M15.** Q: In A330 ELEC EMER CONFIG with RAT, what causes the aircraft to be out of trim in roll?
+A: Right outboard aileron upfloat. Pay close attention to bank angle and heading.
+
+**M16.** Q: A350 dual engine failure — what 3 things happen automatically?
+A: (1) APU auto-starts, (2) Auto-relight launched on both engines, (3) RAT deploys if needed.
+
+**M17.** Q: A350 windmill relight — how long between attempts?
+A: Engine master levers OFF for 30 seconds between attempts to ventilate the combustion chamber.
+
+**M18.** Q: A350 windmill relight unsuccessful — what speed do you target and why?
+A: Reduce to green dot speed. This enables starter-assisted relight (needs APU bleed) and maximises glide distance (best L/D ratio).
+
+**M19.** Q: A350 starter-assisted relight — can you relight both engines simultaneously?
+A: NO. One engine at a time only — APU cannot supply sufficient bleed for two simultaneous starter relights.
+
+**M20.** Q: Smoke identification by odour — acrid smell suggests what source?
+A: Electrical equipment or IFE (primary), or engine oil leak.
+
+---
+
+*260 flashcards compiled from CX FOP OPS Part A Rev 69, OMD Rev 49, A330/A350 FCOM/FCTM, MEL, QRH, and 125+ candidate simulator debriefs.*
 
 </script>
 
