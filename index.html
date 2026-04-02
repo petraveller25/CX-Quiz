@@ -690,8 +690,7 @@ body {
     </svg>
     Sign in with Google
   </button>
-  <button class="login-skip" onclick="skipSignIn()">Continue without signing in</button>
-  <div class="login-note">Without sign-in, progress is saved only on this device/browser.</div>
+  <div class="login-note" style="margin-top:16px">Private app — authorized access only.</div>
 </div>
 
 <!-- Header (hidden until authenticated/skipped) -->
@@ -895,8 +894,15 @@ function signInWithGoogle() {
     return;
   }
   var provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ login_hint: 'waifung2002@yahoo.com.hk' });
   auth.signInWithPopup(provider).then(function(result) {
-    // Auth state listener handles the rest
+    // Check email whitelist
+    var allowedEmails = ['waifung2002@yahoo.com.hk'];
+    if (result.user && !allowedEmails.includes(result.user.email)) {
+      auth.signOut();
+      alert('Access restricted. This app is private.');
+      return;
+    }
   }).catch(function(error) {
     if (error.code === 'auth/popup-blocked') {
       // Fallback to redirect
@@ -981,7 +987,13 @@ function updateSyncStatus(state) {
 // Listen for auth state changes
 if (firebaseReady) {
   auth.onAuthStateChanged(function(user) {
+    var allowedEmails = ['waifung2002@yahoo.com.hk'];
     if (user) {
+      if (!allowedEmails.includes(user.email)) {
+        auth.signOut();
+        alert('Access restricted. This app is private.');
+        return;
+      }
       currentUser = user;
       enterApp();
     }
