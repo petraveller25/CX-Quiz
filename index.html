@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CX CMD Quiz">
+<title>CX Captain Upgrade — Study Tool</title>
+<style>
+:root {
+  --bg: #0a0e17;
+  --card: #141a2a;
+  --card-hover: #1a2236;
+  --accent: #3b82f6;
+  --accent2: #06b6d4;
+  --green: #22c55e;
+  --yellow: #eab308;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --text-dim: #64748b;
+  --border: #1e293b;
+  --radius: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 14, 23, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+}
+
+.header-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.logo span { color: var(--accent); }
+
+.stats-bar {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.stat { display: flex; align-items: center; gap: 4px; }
+.stat-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.stat-dot.green { background: var(--green); }
+.stat-dot.yellow { background: var(--yellow); }
+.stat-dot.red { background: var(--red); }
+
+/* Main Container */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-bottom: 100px;
+}
+
+/* Views */
+.view { display: none; }
+.view.active { display: block; }
+
+/* Menu */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+@media (max-width: 480px) {
+  .menu-grid { grid-template-columns: 1fr; }
+}
+
+.menu-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu-card:hover, .menu-card:active {
+  background: var(--card-hover);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.menu-card .icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.menu-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.menu-card p {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* Section selector */
+.section-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.section-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.section-item:hover, .section-item:active {
+  background: var(--card-hover);
+  border-color: var(--accent);
+}
+
+.section-item .code {
+  background: var(--accent);
+  color: white;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.section-item .info { flex: 1; }
+.section-item .name { font-size: 14px; font-weight: 600; }
+.section-item .count { font-size: 12px; color: var(--text-dim); }
+
+.section-item .progress-mini {
+  width: 60px; height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-left: 12px;
+}
+
+.section-item .progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+/* Flashcard */
+.flashcard-container {
+  perspective: 1000px;
+  margin-top: 20px;
+}
+
+.flashcard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-height: 280px;
+  padding: 28px 24px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.flashcard:active {
+  transform: scale(0.98);
+}
+
+.flashcard-tag {
+  display: inline-block;
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+}
+
+.flashcard-question {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.flashcard-answer {
+  display: none;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--green);
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.flashcard-answer.visible { display: block; }
+
+.flashcard-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.flashcard-hint.hidden { display: none; }
+
+/* Rating buttons */
+.rating-bar {
+  display: none;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.rating-bar.visible {
+  display: grid;
+}
+
+.rate-btn {
+  padding: 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rate-btn:active { transform: scale(0.95); }
+.rate-btn.got-it:hover, .rate-btn.got-it:active { border-color: var(--green); background: rgba(34,197,94,0.1); }
+.rate-btn.partial:hover, .rate-btn.partial:active { border-color: var(--yellow); background: rgba(234,179,8,0.1); }
+.rate-btn.missed:hover, .rate-btn.missed:active { border-color: var(--red); background: rgba(239,68,68,0.1); }
+
+/* Counter */
+.card-counter {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 16px;
+}
+
+/* Progress bar (full width) */
+.progress-bar-full {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.progress-bar-full .fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+/* Quiz mode */
+.quiz-input {
+  width: 100%;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  margin-top: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.quiz-input:focus { border-color: var(--accent); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active { transform: scale(0.96); }
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.btn-primary:hover { background: #2563eb; }
+
+.btn-secondary {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 100%;
+  margin-top: 8px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Results */
+.result-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.result-score {
+  font-size: 48px;
+  font-weight: 800;
+  margin: 12px 0;
+}
+
+.result-label {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.result-message {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+/* Progress view */
+.progress-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.progress-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progress-section-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.progress-section-pct {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.progress-section-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-section-bar .fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s;
+}
+
+/* Weak card list */
+.weak-list {
+  margin-top: 16px;
+}
+
+.weak-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+}
+
+.weak-item:last-child { border-bottom: none; }
+.weak-item .tag {
+  color: var(--red);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+/* Swipe hint animation */
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.pulse { animation: pulse 2s infinite; }
+
+/* Safe area for notch phones */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .header { padding-top: calc(16px + env(safe-area-inset-top)); }
+  .container { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo"><span>CX</span> Captain Upgrade</div>
+    <div class="stats-bar" id="statsBar">
+      <div class="stat"><div class="stat-dot green"></div><span id="statStrong">0</span></div>
+      <div class="stat"><div class="stat-dot yellow"></div><span id="statLearning">0</span></div>
+      <div class="stat"><div class="stat-dot red"></div><span id="statWeak">0</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- HOME VIEW -->
+  <div class="view active" id="homeView">
+    <div class="menu-grid">
+      <div class="menu-card" onclick="startFlashcards()">
+        <div class="icon">📇</div>
+        <h3>Flashcards</h3>
+        <p>Study cards, tap to reveal, self-rate</p>
+      </div>
+      <div class="menu-card" onclick="startQuiz()">
+        <div class="icon">📝</div>
+        <h3>Quiz</h3>
+        <p>Type answers, compare, get scored</p>
+      </div>
+      <div class="menu-card" onclick="startWeakReview()">
+        <div class="icon">🔴</div>
+        <h3>Weak Review</h3>
+        <p>Focus on cards you missed</p>
+      </div>
+      <div class="menu-card" onclick="showSections()">
+        <div class="icon">📂</div>
+        <h3>Section Drill</h3>
+        <p>Drill a specific topic area</p>
+      </div>
+      <div class="menu-card" onclick="showProgress()">
+        <div class="icon">📊</div>
+        <h3>Progress</h3>
+        <p>See your stats by section</p>
+      </div>
+      <div class="menu-card" onclick="resetProgress()">
+        <div class="icon">🔄</div>
+        <h3>Reset</h3>
+        <p>Clear all progress, start fresh</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION SELECT VIEW -->
+  <div class="view" id="sectionView">
+    <button class="btn-back" onclick="goHome()">← Back</button>
+    <h2 style="font-size:20px;margin-bottom:4px">Choose Section</h2>
+    <p style="font-size:13px;color:var(--text-dim)">Select a topic to drill</p>
+    <div class="section-list" id="sectionList"></div>
+  </div>
+
+  <!-- FLASHCARD VIEW -->
+  <div class="view" id="flashcardView">
+    <button class="btn-back" onclick="goHome()">← Back</button>
+    <div class="card-counter" id="cardCounter">1 / 20</div>
+    <div class="progress-bar-full"><div class="fill" id="cardProgress" style="width:0%"></div></div>
+    <div class="flashcard-container">
+      <div class="flashcard" id="flashcard" onclick="revealAnswer()">
+        <div class="flashcard-tag" id="cardTag">A1 — PIC Authority</div>
+        <div class="flashcard-question" id="cardQuestion">Loading...</div>
+        <div class="flashcard-answer" id="cardAnswer"></div>
+        <div class="flashcard-hint pulse" id="cardHint">Tap to reveal answer</div>
+      </div>
+    </div>
+    <div class="rating-bar" id="ratingBar">
+      <button class="rate-btn got-it" onclick="rateCard(1)">✓ Got it</button>
+      <button class="rate-btn partial" onclick="rateCard(2)">~ Partial</button>
+      <button class="rate-btn missed" onclick="rateCard(3)">✗ Missed</button>
+    </div>
+  </div>
+
+  <!-- QUIZ VIEW -->
+  <div class="view" id="quizView">
+    <button class="btn-back" onclick="goHome()">← Back</button>
+    <div class="card-counter" id="quizCounter">1 / 20</div>
+    <div class="progress-bar-full"><div class="fill" id="quizProgress" style="width:0%"></div></div>
+    <div class="flashcard" style="cursor:default;margin-top:20px">
+      <div class="flashcard-tag" id="quizTag">A1</div>
+      <div class="flashcard-question" id="quizQuestion">Loading...</div>
+    </div>
+    <textarea class="quiz-input" id="quizInput" placeholder="Type your answer..." rows="3"></textarea>
+    <button class="btn btn-primary" id="quizSubmitBtn" onclick="submitQuizAnswer()">Show Answer</button>
+    <div id="quizAnswerBox" style="display:none;margin-top:16px">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;">
+        <div style="font-size:12px;color:var(--green);font-weight:600;margin-bottom:8px">CORRECT ANSWER</div>
+        <div id="quizCorrectAnswer" style="font-size:15px;line-height:1.5"></div>
+      </div>
+      <div class="rating-bar visible" style="margin-top:12px">
+        <button class="rate-btn got-it" onclick="quizRate(1)">✓ Correct</button>
+        <button class="rate-btn partial" onclick="quizRate(2)">~ Partial</button>
+        <button class="rate-btn missed" onclick="quizRate(3)">✗ Wrong</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS VIEW -->
+  <div class="view" id="resultsView">
+    <button class="btn-back" onclick="goHome()">← Back</button>
+    <div class="result-card">
+      <div class="result-label">Session Complete</div>
+      <div class="result-score" id="resultScore">0%</div>
+      <div class="result-message" id="resultMessage"></div>
+    </div>
+    <div id="resultDetails" style="margin-top:16px"></div>
+    <button class="btn btn-primary" onclick="goHome()" style="margin-top:20px">Back to Menu</button>
+  </div>
+
+  <!-- PROGRESS VIEW -->
+  <div class="view" id="progressView">
+    <button class="btn-back" onclick="goHome()">← Back</button>
+    <h2 style="font-size:20px;margin-bottom:4px">Progress Report</h2>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px" id="progressSummary"></p>
+    <div id="progressSections"></div>
+    <div id="weakCardsList"></div>
+  </div>
+
+</div>
+
+<script>
+// ===== FLASHCARD DATA =====
+const SECTIONS = {
+  A: "PIC Authority & Operational Control",
+  B: "Fuel Management & Declarations",
+  C: "Stabilised Approach & Approach Ban",
+  D: "LVO / All Weather Operations",
+  E: "EDTO Procedures",
+  F: "Non-Normal Operations",
+  G: "FTL & Crew",
+  H: "Crew Health, Security & Reporting",
+  I: "A330 vs A350 Systems",
+  J: "Flight Control Laws & Sim Scenarios",
+};
+
+let allCards = [];
+let currentDeck = [];
+let currentIndex = 0;
+let sessionResults = [];
+let currentMode = "flashcard"; // flashcard or quiz
+
+// ===== PARSE FLASHCARDS FROM EMBEDDED DATA =====
+const FLASHCARD_MD = `PLACEHOLDER`;
+
+function parseCardsFromPage() {
+  // Fetch the markdown file or use embedded data
+  const text = document.getElementById('flashcardData')?.textContent || '';
+  const pattern = /\*\*([A-J]\d+)\.\*\*\s+Q:\s*(.*?)\nA:\s*(.*?)(?=\n\n|\n\*\*|$)/gs;
+  let match;
+  while ((match = pattern.exec(text)) !== null) {
+    allCards.push({
+      id: match[1],
+      section: match[1][0],
+      sectionName: SECTIONS[match[1][0]] || "Unknown",
+      question: match[2].trim(),
+      answer: match[3].trim(),
+    });
+  }
+}
+
+// ===== PROGRESS MANAGEMENT (localStorage) =====
+function loadProgress() {
+  try {
+    return JSON.parse(localStorage.getItem('cx_quiz_progress')) || {
+      attempts: {}, strong: [], weak: [], lastSession: null
+    };
+  } catch { return { attempts: {}, strong: [], weak: [], lastSession: null }; }
+}
+
+function saveProgress(p) {
+  p.lastSession = new Date().toISOString();
+  localStorage.setItem('cx_quiz_progress', JSON.stringify(p));
+  updateStats();
+}
+
+function updateStats() {
+  const p = loadProgress();
+  const strong = p.strong.length;
+  const weak = p.weak.length;
+  const learning = Object.keys(p.attempts).length - strong - weak;
+  document.getElementById('statStrong').textContent = strong;
+  document.getElementById('statLearning').textContent = Math.max(0, learning);
+  document.getElementById('statWeak').textContent = weak;
+}
+
+// ===== NAVIGATION =====
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  showView('homeView');
+}
+
+// ===== SHUFFLE =====
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ===== FLASHCARD MODE =====
+function startFlashcards(subset) {
+  currentMode = "flashcard";
+  currentDeck = shuffle(subset || allCards);
+  currentIndex = 0;
+  sessionResults = [];
+  showView('flashcardView');
+  showCard();
+}
+
+function showCard() {
+  if (currentIndex >= currentDeck.length) {
+    showResults();
+    return;
+  }
+  const card = currentDeck[currentIndex];
+  document.getElementById('cardTag').textContent = `${card.id} — ${card.sectionName}`;
+  document.getElementById('cardQuestion').textContent = card.question;
+  document.getElementById('cardAnswer').textContent = card.answer;
+  document.getElementById('cardAnswer').classList.remove('visible');
+  document.getElementById('cardHint').classList.remove('hidden');
+  document.getElementById('ratingBar').classList.remove('visible');
+  document.getElementById('cardCounter').textContent = `${currentIndex + 1} / ${currentDeck.length}`;
+  document.getElementById('cardProgress').style.width = `${(currentIndex / currentDeck.length) * 100}%`;
+}
+
+function revealAnswer() {
+  const ans = document.getElementById('cardAnswer');
+  if (ans.classList.contains('visible')) return;
+  ans.classList.add('visible');
+  document.getElementById('cardHint').classList.add('hidden');
+  document.getElementById('ratingBar').classList.add('visible');
+}
+
+function rateCard(rating) {
+  const card = currentDeck[currentIndex];
+  const p = loadProgress();
+  p.attempts[card.id] = (p.attempts[card.id] || 0) + 1;
+
+  if (rating === 1) {
+    sessionResults.push({ id: card.id, result: 'correct' });
+    if (!p.strong.includes(card.id)) p.strong.push(card.id);
+    p.weak = p.weak.filter(x => x !== card.id);
+  } else if (rating === 3) {
+    sessionResults.push({ id: card.id, result: 'wrong' });
+    if (!p.weak.includes(card.id)) p.weak.push(card.id);
+    p.strong = p.strong.filter(x => x !== card.id);
+  } else {
+    sessionResults.push({ id: card.id, result: 'partial' });
+    p.strong = p.strong.filter(x => x !== card.id);
+  }
+
+  saveProgress(p);
+  currentIndex++;
+  showCard();
+}
+
+// ===== QUIZ MODE =====
+function startQuiz(subset) {
+  currentMode = "quiz";
+  currentDeck = shuffle(subset || allCards).slice(0, 20);
+  currentIndex = 0;
+  sessionResults = [];
+  showView('quizView');
+  showQuizCard();
+}
+
+function showQuizCard() {
+  if (currentIndex >= currentDeck.length) {
+    showResults();
+    return;
+  }
+  const card = currentDeck[currentIndex];
+  document.getElementById('quizTag').textContent = `${card.id} — ${card.sectionName}`;
+  document.getElementById('quizQuestion').textContent = card.question;
+  document.getElementById('quizInput').value = '';
+  document.getElementById('quizInput').focus();
+  document.getElementById('quizAnswerBox').style.display = 'none';
+  document.getElementById('quizSubmitBtn').style.display = '';
+  document.getElementById('quizCounter').textContent = `${currentIndex + 1} / ${currentDeck.length}`;
+  document.getElementById('quizProgress').style.width = `${(currentIndex / currentDeck.length) * 100}%`;
+}
+
+function submitQuizAnswer() {
+  const card = currentDeck[currentIndex];
+  document.getElementById('quizCorrectAnswer').textContent = card.answer;
+  document.getElementById('quizAnswerBox').style.display = 'block';
+  document.getElementById('quizSubmitBtn').style.display = 'none';
+}
+
+function quizRate(rating) {
+  const card = currentDeck[currentIndex];
+  const p = loadProgress();
+  p.attempts[card.id] = (p.attempts[card.id] || 0) + 1;
+
+  if (rating === 1) {
+    sessionResults.push({ id: card.id, result: 'correct' });
+    if (!p.strong.includes(card.id)) p.strong.push(card.id);
+    p.weak = p.weak.filter(x => x !== card.id);
+  } else if (rating === 3) {
+    sessionResults.push({ id: card.id, result: 'wrong' });
+    if (!p.weak.includes(card.id)) p.weak.push(card.id);
+    p.strong = p.strong.filter(x => x !== card.id);
+  } else {
+    sessionResults.push({ id: card.id, result: 'partial' });
+    p.strong = p.strong.filter(x => x !== card.id);
+  }
+
+  saveProgress(p);
+  currentIndex++;
+  showQuizCard();
+}
+
+// ===== WEAK REVIEW =====
+function startWeakReview() {
+  const p = loadProgress();
+  const weak = allCards.filter(c => p.weak.includes(c.id));
+  if (weak.length === 0) {
+    alert('No weak cards! Study some flashcards first.');
+    return;
+  }
+  startFlashcards(weak);
+}
+
+// ===== SECTION DRILL =====
+function showSections() {
+  showView('sectionView');
+  const list = document.getElementById('sectionList');
+  const p = loadProgress();
+  list.innerHTML = '';
+
+  for (const [code, name] of Object.entries(SECTIONS)) {
+    const sCards = allCards.filter(c => c.section === code);
+    const strong = sCards.filter(c => p.strong.includes(c.id)).length;
+    const pct = sCards.length > 0 ? Math.round((strong / sCards.length) * 100) : 0;
+
+    const el = document.createElement('div');
+    el.className = 'section-item';
+    el.onclick = () => startSectionDrill(code);
+    el.innerHTML = `
+      <div class="code">${code}</div>
+      <div class="info">
+        <div class="name">${name}</div>
+        <div class="count">${sCards.length} cards · ${strong} strong</div>
+      </div>
+      <div class="progress-mini"><div class="progress-fill" style="width:${pct}%"></div></div>
+    `;
+    list.appendChild(el);
+  }
+}
+
+function startSectionDrill(code) {
+  const subset = allCards.filter(c => c.section === code);
+  startFlashcards(subset);
+}
+
+// ===== RESULTS =====
+function showResults() {
+  showView('resultsView');
+  const correct = sessionResults.filter(r => r.result === 'correct').length;
+  const total = sessionResults.length;
+  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  const scoreEl = document.getElementById('resultScore');
+  scoreEl.textContent = `${pct}%`;
+  scoreEl.style.color = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--yellow)' : 'var(--red)';
+
+  const msg = document.getElementById('resultMessage');
+  if (pct >= 90) msg.textContent = 'Excellent — ready for the sim!';
+  else if (pct >= 70) msg.textContent = 'Good progress — review weak areas.';
+  else msg.textContent = 'Needs work — focus on weak cards.';
+  msg.style.color = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--yellow)' : 'var(--red)';
+
+  const details = document.getElementById('resultDetails');
+  details.innerHTML = sessionResults.map(r => {
+    const icon = r.result === 'correct' ? '✓' : r.result === 'wrong' ? '✗' : '~';
+    const color = r.result === 'correct' ? 'var(--green)' : r.result === 'wrong' ? 'var(--red)' : 'var(--yellow)';
+    return `<div style="padding:6px 0;font-size:13px;display:flex;gap:8px;border-bottom:1px solid var(--border)">
+      <span style="color:${color};font-weight:700;width:20px">${icon}</span>
+      <span style="color:var(--text-dim)">${r.id}</span>
+    </div>`;
+  }).join('');
+}
+
+// ===== PROGRESS VIEW =====
+function showProgress() {
+  showView('progressView');
+  const p = loadProgress();
+  const total = allCards.length;
+  const studied = Object.keys(p.attempts).length;
+
+  document.getElementById('progressSummary').textContent =
+    `${studied}/${total} studied · ${p.strong.length} strong · ${p.weak.length} weak`;
+
+  const container = document.getElementById('progressSections');
+  container.innerHTML = '';
+
+  for (const [code, name] of Object.entries(SECTIONS)) {
+    const sCards = allCards.filter(c => c.section === code);
+    const strong = sCards.filter(c => p.strong.includes(c.id)).length;
+    const weak = sCards.filter(c => p.weak.includes(c.id)).length;
+    const pct = sCards.length > 0 ? Math.round((strong / sCards.length) * 100) : 0;
+    const color = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--yellow)' : 'var(--red)';
+
+    const el = document.createElement('div');
+    el.className = 'progress-section';
+    el.innerHTML = `
+      <div class="progress-section-header">
+        <div class="progress-section-name">${code} · ${name}</div>
+        <div class="progress-section-pct" style="color:${color}">${pct}%</div>
+      </div>
+      <div class="progress-section-bar"><div class="fill" style="width:${pct}%;background:${color}"></div></div>
+      ${weak > 0 ? `<div style="font-size:11px;color:var(--red);margin-top:6px">${weak} weak cards</div>` : ''}
+    `;
+    container.appendChild(el);
+  }
+
+  // Weak cards list
+  const weakList = document.getElementById('weakCardsList');
+  if (p.weak.length > 0) {
+    weakList.innerHTML = `<h3 style="font-size:16px;margin-top:24px;margin-bottom:8px;color:var(--red)">Weak Cards (${p.weak.length})</h3>`;
+    p.weak.sort().forEach(cid => {
+      const card = allCards.find(c => c.id === cid);
+      if (card) {
+        weakList.innerHTML += `<div class="weak-item"><span class="tag">${cid}</span><span>${card.question}</span></div>`;
+      }
+    });
+  } else {
+    weakList.innerHTML = '';
+  }
+}
+
+// ===== RESET =====
+function resetProgress() {
+  if (confirm('Reset all progress? This cannot be undone.')) {
+    localStorage.removeItem('cx_quiz_progress');
+    updateStats();
+    alert('Progress reset.');
+  }
+}
+
+// ===== KEYBOARD SHORTCUTS =====
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('flashcardView').classList.contains('active')) {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      if (!document.getElementById('cardAnswer').classList.contains('visible')) {
+        revealAnswer();
+      }
+    }
+    if (e.key === '1') rateCard(1);
+    if (e.key === '2') rateCard(2);
+    if (e.key === '3') rateCard(3);
+  }
+  if (e.key === 'Escape') goHome();
+});
+
+// ===== INIT =====
+window.addEventListener('DOMContentLoaded', () => {
+  // Load flashcard data from script tag
+  parseCardsFromPage();
+  updateStats();
+});
+</script>
+
+<!-- Embedded flashcard data (parsed on load) -->
+<script type="text/plain" id="flashcardData">
+# CX Captain Upgrade — Flashcards
+## 200 Questions Organized by Topic
+
+---
+
+## SECTION A: PIC Authority & Operational Control (20 cards)
+
+**A1.** Q: When does PIC safety responsibility begin?
+A: Doors closed or engine start, whichever occurs FIRST.
+
+**A2.** Q: When does PIC safety responsibility end?
+A: Any external door opened on arrival AND engines shutdown.
+
+**A3.** Q: What type of operational control system does CX use?
+A: PIC-assisted, non-shared system (IATA definition). PIC has sole authority.
+
+**A4.** Q: Can you refuse an IOC directive?
+A: Yes — if PIC decides compliance would jeopardise safe operation of the aircraft.
+
+**A5.** Q: In an emergency, what can the PIC vary?
+A: ANY procedure, limitation, or checklist to ensure continued safety.
+
+**A6.** Q: What is the command succession order?
+A: Relief Qualified Pilot → Safety Pilot → First Officer → Second Officer.
+
+**A7.** Q: Can the PIC reject an aircraft?
+A: Yes — authority to reject prior to departure if dissatisfied with airworthiness/maintenance status.
+
+**A8.** Q: Who initiates the flight?
+A: The PIC. It is the responsibility of the PIC to initiate the flight.
+
+**A9.** Q: What 3 documents can an Operations Dispensation NEVER override?
+A: AFM (Aircraft Flight Manual), CDL, and Approved Flight Time Limitations Scheme.
+
+**A10.** Q: Can you refuse flight deck access to a HKCAD inspector?
+A: Yes — if PIC opinion is that safety of the aircraft would be endangered.
+
+**A11.** Q: What is the PIC's authority over crew members?
+A: Full control and authority, WITHOUT LIMITATION.
+
+**A12.** Q: If PIC delegates duties to crew, who retains responsibility?
+A: The PIC retains FULL responsibility.
+
+**A13.** Q: Who has final authority over disposition of the aircraft in flight?
+A: The PIC.
+
+**A14.** Q: Can the PIC disembark a passenger?
+A: Yes — authority to disembark any person or cargo posing potential safety hazard.
+
+**A15.** Q: What must the PIC do regarding FDR after an accident?
+A: Not permit FDR to be disabled, switched off, or erased during flight, nor permit data erasure after accident/incident.
+
+**A16.** Q: Can the PIC apply higher safety margins than those in the Ops Manual?
+A: Yes — PIC has authority to apply greater safety margins if deemed necessary.
+
+**A17.** Q: Who coordinates Operations Dispensations?
+A: All dispensations coordinated through IOC. DOM normally grants them.
+
+**A18.** Q: When more than one Captain on a flight, who is PIC?
+A: The Company-designated PIC occupies the left-hand seat and is recorded on GD, flight plan, and AML.
+
+**A19.** Q: What is the Sterile Cockpit rule?
+A: PIC shall not permit any crew member to perform any activity during takeoff, initial climb, final approach, and landing except duties required for safe operation.
+
+**A20.** Q: After an operational event, what must the PIC lead?
+A: A debrief of the event at the earliest opportunity after aircraft shutdown.
+
+---
+
+## SECTION B: Fuel Management & Declarations (20 cards)
+
+**B1.** Q: What is the Final Reserve Fuel for A330?
+A: 2,600 kg.
+
+**B2.** Q: What is the Final Reserve Fuel for A350?
+A: 2,600 kg.
+
+**B3.** Q: What is the "MINIMUM FUEL" declaration?
+A: BOX 2 — committed to specific aerodrome, any change may result in landing below Final Reserve. NOT an emergency.
+
+**B4.** Q: What is the "MAYDAY FUEL" declaration?
+A: BOX 3 — usable fuel at nearest aerodrome predicted less than Final Reserve. IS an emergency, landing priority.
+
+**B5.** Q: Is "MINIMUM FUEL" an emergency?
+A: NO. No priority expected. It is informational only.
+
+**B6.** Q: How often must in-flight fuel checks be conducted?
+A: At least once every sector, at intervals NOT exceeding 60 minutes during cruise.
+
+**B7.** Q: What are the 4 conditions to continue below Min Div Fuel pre-descent?
+A: (1) Two independent runways within 60 NM, (2) weather at/above NPA planning minima, (3) no known ATC delays, (4) fuel ≥ destination + 5% contingency from last ERA + 30 min hold + approach.
+
+**B8.** Q: After descent commenced, when may you continue below Min Div?
+A: If landing fuel will be at or above Final Reserve Fuel.
+
+**B9.** Q: What is Normal Fuel Required?
+A: Destination + approach + divert to alternate + 5% contingency + 30 min hold at 1,500 ft AAL + approach/landing at alternate.
+
+**B10.** Q: What is the Final Reserve Fuel for B777-300ER?
+A: 3,500 kg.
+
+**B11.** Q: When should you request delay information (BOX 1)?
+A: When you may land with less than Minimum Diversion Fuel.
+
+**B12.** Q: What fuel jettison altitude is recommended?
+A: 5,000–6,000 ft AGL when possible (no restriction lower if necessary).
+
+**B13.** Q: Can you jettison fuel in a holding pattern?
+A: NO.
+
+**B14.** Q: Can you jettison fuel near thunderstorms?
+A: NO.
+
+**B15.** Q: After fuel jettison, should you descend through the same area?
+A: NO — avoid to prevent fuel vapour ingestion.
+
+**B16.** Q: What fuel is required for depressurisation/engine shutdown planning?
+A: Continued flight to nearest adequate airport + hold at 1,500 ft for 15 min + approach and landing.
+
+**B17.** Q: What is the B747-8F Final Reserve Fuel?
+A: 4,800 kg.
+
+**B18.** Q: What is the EDTO critical fuel minimum remaining at ERA?
+A: 15 minutes at 1,500 ft AAL consumption rate.
+
+**B19.** Q: How is fuel jettison quantity recorded?
+A: On ACARS fuel summary or CAR free text.
+
+**B20.** Q: What is the 5% contingency applied to?
+A: Trip fuel (from overhead/abeam last ERA for in-flight reduction).
+
+---
+
+## SECTION C: Stabilised Approach & Approach Ban (20 cards)
+
+**C1.** Q: What is the maximum vertical speed at 1,000 ft AAL for a stabilised approach?
+A: 1,200 fpm.
+
+**C2.** Q: By what altitude must configuration be complete (gear, flaps, checklist)?
+A: 1,000 ft AAL.
+
+**C3.** Q: If ATC assigns speed above VAPP, by when must speed be stable?
+A: 500 ft AAL, with thrust above idle.
+
+**C4.** Q: By when must you be wings level on centreline for a visual approach?
+A: 300 ft AAL.
+
+**C5.** Q: What is the Derived Decision Altitude (DDA) for NPA?
+A: MDA + 50 ft.
+
+**C6.** Q: Is level flight from MDA to MAP permitted?
+A: NO. CDFA technique is mandatory.
+
+**C7.** Q: Is circling an approved approach procedure at CX?
+A: NO. Request instrument approach to landing runway or radar vectors for visual.
+
+**C8.** Q: What happens if RVR drops below minimum BEFORE 1,000 ft AAL?
+A: May continue to 1,000 ft; go-around if still below at 1,000 ft.
+
+**C9.** Q: What if you're BELOW 1,000 ft when RVR drops?
+A: Continue to DH; land if visual reference established; go-around if not.
+
+**C10.** Q: What about CAT 3B No DH when RVR drops?
+A: Approach may be completed — visual reference not required until after nosewheel touchdown.
+
+**C11.** Q: How many approaches to a single runway are allowed below 1,000 ft?
+A: Maximum 2. Third at PIC discretion.
+
+**C12.** Q: What is the normal touchdown zone?
+A: 1,500 ft ± 500 ft from threshold.
+
+**C13.** Q: What landing distance safety margin is applied for normal operations?
+A: 15%.
+
+**C14.** Q: What is the minimum visibility for a visual approach?
+A: 5 km along intended flight path.
+
+**C15.** Q: Can you fly a night visual approach at an unfamiliar airport?
+A: NO. Only at airports where PIC previously operated AND entirely familiar with terrain.
+
+**C16.** Q: Visual approach with thin fog/mist — what is the minimum RVR?
+A: 800 m, or NPA minima for runway, whichever is greater.
+
+**C17.** Q: When is autoland strongly recommended?
+A: Visibility < 1,500 m or cloudbase below 300 ft.
+
+**C18.** Q: Who may complete an autoland?
+A: Only the PIC (except crew incapacitation/emergency).
+
+**C19.** Q: Is GLS approved for LVO operations?
+A: NO. GLS only at CAT 1 minima or above.
+
+**C20.** Q: What is the approach ban rule?
+A: PIC shall NOT commence approach (descent below 1,000 ft AAL) if reported RVR is below published minimum.
+
+---
+
+## SECTION D: LVO / All Weather Operations (20 cards)
+
+**D1.** Q: What defines an LVO landing?
+A: RVR < 550 m.
+
+**D2.** Q: What defines an LVTO?
+A: RVR < 400 m (< 1,200 ft for USA/Canada).
+
+**D3.** Q: CAT 2 DH?
+A: 100 ft.
+
+**D4.** Q: CAT 2 TDZ RVR (general, autoland)?
+A: 300 m.
+
+**D5.** Q: CAT 3A DH?
+A: 50 ft.
+
+**D6.** Q: CAT 3A TDZ RVR (general)?
+A: 200 m.
+
+**D7.** Q: CAT 3B No DH TDZ RVR (Airbus, general)?
+A: 75 m.
+
+**D8.** Q: CAT 3B No DH TDZ RVR (Boeing, general)?
+A: 100 m.
+
+**D9.** Q: USA CAT 2 TDZ RVR?
+A: 1,200 ft.
+
+**D10.** Q: USA CAT 3A TDZ RVR?
+A: 700 ft.
+
+**D11.** Q: USA maximum crosswind for ALL LVO categories?
+A: 15 kt.
+
+**D12.** Q: Who must be PF during LVO?
+A: PIC from left seat (except emergency/incapacitation).
+
+**D13.** Q: Is autothrust mandatory for CAT 3B?
+A: YES.
+
+**D14.** Q: What visual reference is required for CAT 3A?
+A: 3 centreline lights.
+
+**D15.** Q: What visual reference for CAT 3B No DH?
+A: Not required.
+
+**D16.** Q: What visual reference for CAT 2?
+A: Approach environment and threshold.
+
+**D17.** Q: Must LVP be in force before commencing an LVO approach?
+A: YES.
+
+**D18.** Q: Can a Command Trainee operate as PF during LVO?
+A: Yes — with LVO-qualified Training Captain as PM in right seat.
+
+**D19.** Q: CAT 1 midpoint RVR minimum?
+A: 200 m (150 m for autoland).
+
+**D20.** Q: When should instrument approach not be conducted without RVR?
+A: When visibility is less than 800 m — RVR must be provided for runway of intended use.
+
+---
+
+## SECTION E: EDTO (20 cards)
+
+**E1.** Q: What is the EDTO threshold time for 2-engine aircraft?
+A: 60 minutes.
+
+**E2.** Q: A330 maximum EDTO diversion time?
+A: 120 / 180 minutes.
+
+**E3.** Q: A350-900 maximum EDTO diversion time?
+A: 180 / 240 minutes.
+
+**E4.** Q: What 3 failure cases determine critical fuel at most critical point?
+A: (1) One engine failure, (2) depressurisation, (3) simultaneous engine failure + depressurisation.
+
+**E5.** Q: What is the EDTO operational safety margin?
+A: 15 minutes (applied to most limiting system time + cargo fire suppression time).
+
+**E6.** Q: What must you verify before EDTO entry point?
+A: ERA weather at/above landing minima, crosswind within limits; if below — nominate alternate ERA; if none available — do NOT enter EDTO segment.
+
+**E7.** Q: How is an MEL item affecting EDTO recorded?
+A: As a PADD in AML.
+
+**E8.** Q: Can an Operations Dispensation be granted for EDTO-required MEL items?
+A: NO. Doing so downgrades aircraft to non-EDTO.
+
+**E9.** Q: Is the A321neo EDTO approved?
+A: NO.
+
+**E10.** Q: What is the EDTO verification flight requirement?
+A: PIC contacts MC via ACARS after 90 min and prior to EDTO entry point; AML entry "EDTO verification flight completed — Satisfactory".
+
+**E11.** Q: A350-1000 max EDTO diversion distance?
+A: 1,712 NM (at 240 min).
+
+**E12.** Q: B777-300ER max EDTO diversion time?
+A: 180 / 240 minutes.
+
+**E13.** Q: 2-engine EDTO distances are calculated at what speed?
+A: VMO/MMO, ISA, still air, OEI (drift-down credit allowed).
+
+**E14.** Q: If ERA weather deteriorates during EDTO segment, what do you do?
+A: Select another suitable ERA; remain on planned route; use nearest suitable.
+
+**E15.** Q: Is the B747-400F EDTO approved?
+A: NO (180 min threshold already covers most routes).
+
+**E16.** Q: B747-8F max EDTO diversion time?
+A: 240 minutes.
+
+**E17.** Q: What additional fuel factors apply from critical point to ERA?
+A: 5% wind contingency, aircraft performance factor, APU fuel, icing penalty, CDL/MEL penalties.
+
+**E18.** Q: What altitude is required for EDTO APU in-flight start health monitoring?
+A: At or above FL300.
+
+**E19.** Q: What minimum sector length for EDTO APU in-flight start?
+A: Greater than 3 hours.
+
+**E20.** Q: Critical fuel must include descent to 1,500 ft at ERA plus what?
+A: Approach and landing with minimum 15 minutes fuel remaining.
+
+---
+
+## SECTION F: Non-Normal Operations (20 cards)
+
+**F1.** Q: Transponder code for general emergency?
+A: 7700.
+
+**F2.** Q: Transponder code for communications failure?
+A: 7600.
+
+**F3.** Q: Transponder code for unlawful interference?
+A: 7500.
+
+**F4.** Q: 2-engine aircraft with 1 engine shutdown — what action?
+A: Land at nearest suitable airport.
+
+**F5.** Q: 4-engine aircraft with 1 engine shutdown — what action?
+A: PIC decision. No airworthiness time requirement.
+
+**F6.** Q: 4-engine with 2 engines shutdown?
+A: Emergency. Land at nearest suitable airport.
+
+**F7.** Q: Maximum sink rate for overweight landing with no structural implications?
+A: 360 fpm.
+
+**F8.** Q: Can a medical emergency justify an overweight landing?
+A: YES.
+
+**F9.** Q: What 3 things are mandatory after an overweight landing?
+A: AML entry, AMM inspection before further flight, ASR.
+
+**F10.** Q: Can an incapacitated crew member resume duties after recovery?
+A: NO — not until cleared by SMO/DMO.
+
+**F11.** Q: How do you contact aviation medical in flight?
+A: SATCOM or ACARS to Aviation Medical Office (SMO/DMO); if unavailable, use MedLink.
+
+**F12.** Q: What is the difference between emergency landing and precautionary landing?
+A: Emergency = significant risk, prepare for evacuation. Precautionary = non-normal, low risk, normal procedures.
+
+**F13.** Q: What fuel is required for depressurisation planning?
+A: Flight to nearest adequate airport + 15 min hold at 1,500 ft + approach/landing.
+
+**F14.** Q: Runway occupancy — when must you notify ATC?
+A: If on runway > 90 seconds after line-up.
+
+**F15.** Q: Minimum altitude for initiating a turn after takeoff?
+A: 400 ft AAL above departure end of runway, at safe speed.
+
+**F16.** Q: When should ATC comms be established after takeoff?
+A: As soon as possible but NOT before 400 ft AAL.
+
+**F17.** Q: Maximum speed below 5,000 ft AAL?
+A: 250 kt (or green dot/min clean speed if greater).
+
+**F18.** Q: What does "Maintain Runway Heading" mean at CX?
+A: Maintain runway TRACK with drift correction applied (except USA/Canada/Australia = heading without drift).
+
+**F19.** Q: After reverse thrust is selected, what must you do?
+A: A full stop landing shall be made.
+
+**F20.** Q: Is LAHSO permitted for CX?
+A: NO — USA does not permit foreign airlines to conduct LAHSO.
+
+---
+
+## SECTION G: FTL & Crew (20 cards)
+
+**G1.** Q: Maximum FDP for STO acclimatised crew?
+A: 9:00 to 13:00 (depends on start time and sector count).
+
+**G2.** Q: Maximum FDP for LRO with bunk?
+A: 17:00.
+
+**G3.** Q: Maximum FDP for ULRO?
+A: 22:00.
+
+**G4.** Q: Minimum normal rest?
+A: 10 hours.
+
+**G5.** Q: Flight hour limits (7d / 28d / 365d)?
+A: 55 / 100 / 1,000.
+
+**G6.** Q: Duty hour limits (7d / 14d / 28d)?
+A: 60 / 105 / 210.
+
+**G7.** Q: Commander's discretion extension for STO?
+A: +3 hours.
+
+**G8.** Q: Commander's discretion extension for LRO/ULRO?
+A: +2 hours.
+
+**G9.** Q: What is the floor for commander's rest reduction?
+A: 10-hour room availability.
+
+**G10.** Q: If commander reduces rest, what happens to next FDP?
+A: Reduced by the same amount.
+
+**G11.** Q: Landing recency requirement?
+A: 3 takeoffs + 3 landings in 90 days.
+
+**G12.** Q: PC currency?
+A: 12 calendar months.
+
+**G13.** Q: When is controlled rest NOT permitted?
+A: Flights < 2.5 hours block time.
+
+**G14.** Q: Maximum controlled rest duration?
+A: 30 minutes (plus 5 min prep + 20 min recovery = 55 min total).
+
+**G15.** Q: What must be engaged during controlled rest?
+A: Both AP AND autothrust; no altitude changes; no fuel balancing.
+
+**G16.** Q: How often must cabin crew call flight deck during controlled rest?
+A: Every 35 minutes.
+
+**G17.** Q: Maximum consecutive duty days?
+A: 6.
+
+**G18.** Q: Minimum DDOs per 28 days?
+A: 7.
+
+**G19.** Q: When must CDR be filed for commander's discretion extension?
+A: CDR required for any extension. CAD notified if > 2 hours extension within 7 days.
+
+**G20.** Q: Can commander reduce successive rest periods?
+A: NO.
+
+---
+
+## SECTION H: Crew Health, Security & Reporting (20 cards)
+
+**H1.** Q: Bottle-to-throttle minimum?
+A: 8 hours.
+
+**H2.** Q: CX BAC requirement at sign-on?
+A: 0.00% (absolute zero tolerance).
+
+**H3.** Q: When is Class 1 Medical deemed suspended?
+A: Incapacitating injury, pregnancy confirmed, or illness > 20 continuous days.
+
+**H4.** Q: Cosmic radiation CX internal action limit?
+A: 4.8 mSv per rolling 12 months.
+
+**H5.** Q: Pregnant crew radiation limit?
+A: ≤ 1 mSv during entire pregnancy.
+
+**H6.** Q: Flight deck door during security threat?
+A: Remains LOCKED — no exceptions.
+
+**H7.** Q: What are the 5 steps for disruptive passenger escalation?
+A: (1) Cabin crew verbal de-escalation, (2) captain final warning, (3) physical restraint, (4) diversion if safety threatened, (5) law enforcement on arrival.
+
+**H8.** Q: Bomb threat — device found. What do you do?
+A: Do NOT touch, create exclusion zone, squawk 7700, MAYDAY, divert.
+
+**H9.** Q: MOR filing deadline?
+A: Within 72 hours (96 for some categories).
+
+**H10.** Q: What endorsement goes on AML defects requiring ASR?
+A: "ASR RAISED"
+
+**H11.** Q: PTS allowance (doors closed to off blocks)?
+A: 6 minutes.
+
+**H12.** Q: Flight deck crew oxygen mask — when?
+A: Cabin altitude exceeds 10,000 ft.
+
+**H13.** Q: Cabin crew oxygen mask — when?
+A: Cabin altitude exceeds 14,000 ft.
+
+**H14.** Q: Passenger oxygen auto-deploy — when?
+A: Cabin altitude exceeds 14,000 ft.
+
+**H15.** Q: Single pilot at controls ≥ FL300 — oxygen rule?
+A: Mask at immediate readiness, flight deck speaker switched ON and volume checked.
+
+**H16.** Q: Seat belt signs to AUTO — above what altitude?
+A: 15,000 ft.
+
+**H17.** Q: Cabin ready (SB ON on descent)?
+A: 20,000 ft.
+
+**H18.** Q: "Cabin crew prepare for landing" PA?
+A: 10,000 ft (cycle SB signs).
+
+**H19.** Q: "Cabin crew be seated for landing" PA?
+A: ~5,000 ft AAL.
+
+**H20.** Q: Severe turbulence PA?
+A: "Cabin crew, please be seated immediately." Priority = securing themselves, NOT trolleys.
+
+---
+
+## SECTION I: A330 vs A350 Systems (20 cards)
+
+**I1.** Q: A330 hydraulic systems?
+A: 3 systems (Green, Blue, Yellow) at 3,000 psi.
+
+**I2.** Q: A350 hydraulic systems?
+A: 2 systems (Green, Yellow) at 5,000 psi + EHA/EBHA.
+
+**I3.** Q: A330 bleed air system?
+A: Conventional engine bleed air.
+
+**I4.** Q: A350 bleed air system?
+A: No-bleed architecture — electric ECS (Cabin Air Compressors).
+
+**I5.** Q: A330 flight control computers?
+A: 2 ELAC + 3 SEC + 2 FAC.
+
+**I6.** Q: A350 flight control computers?
+A: 3 PRIM + 3 BCM.
+
+**I7.** Q: A330 mechanical backup provides what?
+A: Pitch via manual THS trim wheel + roll via rudder only. No elevator/aileron/spoiler.
+
+**I8.** Q: A350 backup flight controls?
+A: Electrical backup — triple redundant electrical channels. No mechanical reversion.
+
+**I9.** Q: A330 electrical generation?
+A: IDG (Integrated Drive Generator), constant 400 Hz, ~300 kW total.
+
+**I10.** Q: A350 electrical generation?
+A: VFG (Variable Frequency Generator), 360–800 Hz, ~1.3 MW total.
+
+**I11.** Q: A330 wing anti-ice?
+A: Bleed air through piccolo tubes in leading edge slats.
+
+**I12.** Q: A350 wing anti-ice?
+A: Electric resistive heating mats in leading edges.
+
+**I13.** Q: A330 engine anti-ice?
+A: Bleed air to inlet cowl.
+
+**I14.** Q: A350 engine anti-ice?
+A: Electric.
+
+**I15.** Q: How many AOA probes on the A330?
+A: 3 — voting logic uses median value in Normal Law.
+
+**I16.** Q: What deploys automatically on dual engine failure (A330)?
+A: RAT — powers Blue hydraulic system + emergency electrical.
+
+**I17.** Q: A350 displays?
+A: 6 × 15.4" LCD (landscape) + OIS + integrated EFB Class 3.
+
+**I18.** Q: A330 max pressurisation differential?
+A: 8.6 psi.
+
+**I19.** Q: A330 trim tank purpose?
+A: CG management — aft transfer for cruise (drag reduction ~1.5% fuel saving), forward before descent.
+
+**I20.** Q: A350 only remaining bleed air use?
+A: Engine start (APU bleed or ground air).
+
+---
+
+## SECTION J: Airbus Flight Control Laws & Sim Scenarios (20 cards)
+
+**J1.** Q: What does Normal Law pitch axis command?
+A: Load factor (C* law). Neutral stick = 1g.
+
+**J2.** Q: What happens at bank angle > 33° in Normal Law?
+A: Automatic nose-up compensation to maintain altitude.
+
+**J3.** Q: What happens at bank angle > 67° in Normal Law?
+A: Automatic roll back to 33° if stick released.
+
+**J4.** Q: What does Alpha Floor do?
+A: Automatically activates TOGA thrust. Cannot be overridden by thrust lever position.
+
+**J5.** Q: What is lost in Alternate Law?
+A: Alpha protection, alpha floor, and possibly bank angle protection. Stall warning activates instead.
+
+**J6.** Q: What triggers Alternate Law?
+A: Multiple sensor failures (ADR, IR), flight control computer failures, certain system degradation combinations.
+
+**J7.** Q: Sidestick priority — what if both pressed simultaneously?
+A: SUM of inputs (can cancel out — dangerous).
+
+**J8.** Q: Can the captain feel the FO's sidestick inputs?
+A: NO. Non-backdriveable, each independent.
+
+**J9.** Q: Normal Law load factor limits (clean)?
+A: +2.5g / -1.0g.
+
+**J10.** Q: Normal Law load factor limits (flaps extended)?
+A: +2.0g / 0g.
+
+**J11.** Q: With A/THR inop (C1 sim focus), what protection is LOST?
+A: Alpha floor — crew must actively manage stall avoidance.
+
+**J12.** Q: FMGEC 2 inop — what cascading MEL items must be raised?
+A: FMS 2, AP 2, FD 2 — all individually MEL'd and placarded.
+
+**J13.** Q: When should you delay ECAM actions?
+A: Until aircraft is clean, clear of weather, and terrain is safe.
+
+**J14.** Q: 4 levels of intervention (from OMD)?
+A: Question → Suggestion → Instruction → Takeover.
+
+**J15.** Q: What is the fuel declaration when approaching min div?
+A: "PAN PAN FUEL" (Note: some candidates say this but OMA says "MINIMUM FUEL" — know the difference).
+
+**J16.** Q: C3 sim — what is the standard response to RED BOMB WARNING?
+A: Divert to nearest suitable airport, declare MAYDAY, brief ISM/ATC/pax, land, evacuate.
+
+**J17.** Q: C3 sim — cargo smoke action?
+A: Divert WITHOUT hesitation. Common diverts: ZSPD, ZHCC, ZHHH.
+
+**J18.** Q: T2 sim — APU inop, how to start ENG 2?
+A: Via crossbleed from ENG 1 (started with Air Start Unit on ground).
+
+**J19.** Q: What OEB is active for A330 B-LAB?
+A: OEB57 — CAB PR EXCESS CAB ALT (modifies standard ECAM/QRH procedure).
+
+**J20.** Q: Competency grading — how many M grades = overall Unsatisfactory?
+A: More than 4 competencies at Minimum Acceptable (M) = Unsatisfactory.
+
+---
+
+*200 flashcards compiled from CX FOP OPS Part A Rev 69, OMD Rev 49, FCOM/FCTM, MEL, and 125+ candidate simulator debriefs.*
+
+</script>
+
+</body>
+</html>
