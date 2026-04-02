@@ -897,7 +897,7 @@ function signInWithGoogle() {
   provider.setCustomParameters({ login_hint: 'waifung2002@yahoo.com.hk' });
   auth.signInWithPopup(provider).then(function(result) {
     // Check email whitelist
-    var allowedEmails = ['waifung2002@yahoo.com.hk'];
+    var allowedEmails = ['waifung2002@yahoo.com.hk', 'petraveller25@gmail.com'];
     if (result.user && !allowedEmails.includes(result.user.email)) {
       auth.signOut();
       alert('Access restricted. This app is private.');
@@ -987,7 +987,7 @@ function updateSyncStatus(state) {
 // Listen for auth state changes
 if (firebaseReady) {
   auth.onAuthStateChanged(function(user) {
-    var allowedEmails = ['waifung2002@yahoo.com.hk'];
+    var allowedEmails = ['waifung2002@yahoo.com.hk', 'petraveller25@gmail.com'];
     if (user) {
       if (!allowedEmails.includes(user.email)) {
         auth.signOut();
