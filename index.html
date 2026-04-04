@@ -723,7 +723,7 @@ body {
       <div class="menu-card" onclick="startFlashcards()">
         <div class="icon">&#128195;</div>
         <h3>Flashcards</h3>
-        <p>Study cards, tap to reveal, self-rate</p>
+        <p>Study remaining cards (skips strong)</p>
       </div>
       <div class="menu-card" onclick="startQuiz()">
         <div class="icon">&#128221;</div>
@@ -760,8 +760,8 @@ body {
   <!-- SECTION SELECT VIEW -->
   <div class="view" id="sectionView">
     <button class="btn-back" onclick="goHome()">&#8592; Back</button>
-    <h2 style="font-size:20px;margin-bottom:4px">Choose Section</h2>
-    <p style="font-size:13px;color:var(--text-dim)">Select a topic to drill</p>
+    <h2 style="font-size:20px;margin-bottom:4px">Study by Topic</h2>
+    <p style="font-size:13px;color:var(--text-dim)">Cards you've marked strong are skipped. Study a group or individual section.</p>
     <div class="section-list" id="sectionList"></div>
   </div>
 
@@ -1145,6 +1145,13 @@ const SECTIONS = {
   M: "Electrical Failures — Sim Scenarios",
 };
 
+const TOPIC_GROUPS = [
+  { name: "OPS A — Policy & Rules", icon: "📋", sections: ["A", "B", "G", "H"] },
+  { name: "Flight Operations", icon: "✈️", sections: ["C", "D", "E", "F"] },
+  { name: "Airbus — General", icon: "🔧", sections: ["I", "J"] },
+  { name: "Electrical System", icon: "⚡", sections: ["K", "L", "M"] },
+];
+
 let allCards = [];
 let currentDeck = [];
 let currentIndex = 0;
@@ -1227,9 +1234,25 @@ function shuffle(arr) {
 }
 
 // ===== FLASHCARD MODE =====
-function startFlashcards(subset) {
+function startFlashcards(subset, includeStrong) {
   currentMode = "flashcard";
-  currentDeck = shuffle(subset || allCards);
+  var deck = subset || allCards;
+  // Filter out strong cards unless explicitly requested
+  if (!includeStrong) {
+    var p = loadProgress();
+    var strongSet = new Set(p.strong || []);
+    var filtered = deck.filter(function(c) { return !strongSet.has(c.id); });
+    // If all cards are strong, show them all with a note
+    if (filtered.length === 0) {
+      if (confirm('All cards in this deck are marked strong! Review them again?')) {
+        filtered = deck;
+      } else {
+        return;
+      }
+    }
+    deck = filtered;
+  }
+  currentDeck = shuffle(deck);
   currentIndex = 0;
   sessionResults = [];
   showView('flashcardView');
@@ -1286,7 +1309,14 @@ function rateCard(rating) {
 // ===== QUIZ MODE =====
 function startQuiz(subset) {
   currentMode = "quiz";
-  currentDeck = shuffle(subset || allCards).slice(0, 20);
+  var deck = subset || allCards;
+  // Prioritise non-strong cards in quiz
+  var p = loadProgress();
+  var strongSet = new Set(p.strong || []);
+  var nonStrong = deck.filter(function(c) { return !strongSet.has(c.id); });
+  // Use non-strong if available, otherwise all
+  deck = nonStrong.length >= 5 ? nonStrong : deck;
+  currentDeck = shuffle(deck).slice(0, 20);
   currentIndex = 0;
   sessionResults = [];
   showView('quizView');
@@ -1355,30 +1385,61 @@ function showSections() {
   showView('sectionView');
   const list = document.getElementById('sectionList');
   const p = loadProgress();
+  var strongSet = new Set(p.strong || []);
   list.innerHTML = '';
 
-  for (const [code, name] of Object.entries(SECTIONS)) {
-    const sCards = allCards.filter(c => c.section === code);
-    const strong = sCards.filter(c => p.strong.includes(c.id)).length;
-    const pct = sCards.length > 0 ? Math.round((strong / sCards.length) * 100) : 0;
+  TOPIC_GROUPS.forEach(function(group) {
+    // Group header
+    var groupCards = allCards.filter(function(c) { return group.sections.includes(c.section); });
+    var groupStrong = groupCards.filter(function(c) { return strongSet.has(c.id); }).length;
+    var groupRemaining = groupCards.length - groupStrong;
+    var groupPct = groupCards.length > 0 ? Math.round((groupStrong / groupCards.length) * 100) : 0;
 
-    const el = document.createElement('div');
-    el.className = 'section-item';
-    el.onclick = () => startSectionDrill(code);
-    el.innerHTML = `
-      <div class="code">${code}</div>
-      <div class="info">
-        <div class="name">${name}</div>
-        <div class="count">${sCards.length} cards \u00B7 ${strong} strong</div>
-      </div>
-      <div class="progress-mini"><div class="progress-fill" style="width:${pct}%"></div></div>
-    `;
-    list.appendChild(el);
-  }
+    var header = document.createElement('div');
+    header.style.cssText = 'margin-top:20px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;';
+    header.innerHTML = '<div style="font-size:15px;font-weight:700;">' + group.icon + ' ' + group.name + '</div>' +
+      '<div style="font-size:12px;color:var(--text-dim)">' + groupRemaining + ' remaining</div>';
+    list.appendChild(header);
+
+    // Group "Study All" button
+    var allBtn = document.createElement('div');
+    allBtn.className = 'section-item';
+    allBtn.style.cssText = 'border-color:var(--accent);background:rgba(59,130,246,0.05);margin-bottom:4px;';
+    allBtn.onclick = (function(secs) { return function() { startGroupDrill(secs); }; })(group.sections);
+    var allGroupCards = groupCards.length;
+    var allGroupRemaining = groupRemaining;
+    allBtn.innerHTML = '<div class="code" style="background:var(--accent2);">▶</div>' +
+      '<div class="info"><div class="name">Study All ' + group.name + '</div>' +
+      '<div class="count">' + allGroupRemaining + ' of ' + allGroupCards + ' cards remaining</div></div>' +
+      '<div class="progress-mini"><div class="progress-fill" style="width:' + groupPct + '%"></div></div>';
+    list.appendChild(allBtn);
+
+    // Individual sections
+    group.sections.forEach(function(code) {
+      var sCards = allCards.filter(function(c) { return c.section === code; });
+      var strong = sCards.filter(function(c) { return strongSet.has(c.id); }).length;
+      var remaining = sCards.length - strong;
+      var pct = sCards.length > 0 ? Math.round((strong / sCards.length) * 100) : 0;
+
+      var el = document.createElement('div');
+      el.className = 'section-item';
+      el.onclick = (function(c) { return function() { startSectionDrill(c); }; })(code);
+      el.innerHTML = '<div class="code">' + code + '</div>' +
+        '<div class="info"><div class="name">' + (SECTIONS[code] || code) + '</div>' +
+        '<div class="count">' + remaining + ' of ' + sCards.length + ' remaining</div></div>' +
+        '<div class="progress-mini"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
+      list.appendChild(el);
+    });
+  });
 }
 
 function startSectionDrill(code) {
-  const subset = allCards.filter(c => c.section === code);
+  var subset = allCards.filter(function(c) { return c.section === code; });
+  startFlashcards(subset);
+}
+
+function startGroupDrill(sections) {
+  var subset = allCards.filter(function(c) { return sections.includes(c.section); });
   startFlashcards(subset);
 }
 
