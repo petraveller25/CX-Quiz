@@ -1149,6 +1149,15 @@ const SECTIONS = {
   Q: "A330 Flight Control Laws",
   R: "A350 Flight Control Laws — Differences",
   S: "Autoflight & FMA — Operations",
+  T: "A330 Engine System — Operations",
+  U: "A350 Engine System — Differences",
+  V: "Engine Failures — Sim Scenarios",
+  W: "A330 Fire & Smoke Procedures",
+  X: "A350 Fire & Smoke — Differences",
+  Y: "Fire/Smoke — Sim Scenarios",
+  Z: "A330 Pressurisation & Decompression",
+  AA: "A350 Pressurisation — Differences",
+  AB: "Pressurisation — Sim Scenarios",
 };
 
 const TOPIC_GROUPS = [
@@ -1158,6 +1167,9 @@ const TOPIC_GROUPS = [
   { name: "Electrical System", icon: "⚡", sections: ["K", "L", "M"] },
   { name: "Hydraulic System", icon: "🔴", sections: ["N", "O", "P"] },
   { name: "Flight Controls & Autoflight", icon: "🛩️", sections: ["Q", "R", "S"] },
+  { name: "Engines & FADEC", icon: "🔥", sections: ["T", "U", "V"] },
+  { name: "Fire & Smoke", icon: "🧯", sections: ["W", "X", "Y"] },
+  { name: "Pressurisation & Decompression", icon: "💨", sections: ["Z", "AA", "AB"] },
 ];
 
 let allCards = [];
@@ -1583,7 +1595,7 @@ window.addEventListener('DOMContentLoaded', () => {
 <!-- Embedded flashcard data (parsed on load) -->
 <script type="text/plain" id="flashcardData">
 # CX Captain Upgrade — Flashcards
-## 380 Questions Organized by Topic
+## 560 Questions Organized by Topic
 
 ---
 
@@ -2807,7 +2819,583 @@ A: (1) What is the aircraft expected to fly NOW? (2) What is the aircraft expect
 
 ---
 
-*380 flashcards compiled from CX FOP OPS Part A Rev 69, OMD Rev 49, A330/A350 FCOM/FCTM, MEL, QRH, and 125+ candidate simulator debriefs.*
+## SECTION T: A330 Engine System — Operations (20 cards)
+
+**T1.** Q: After engine failure at V1 on A330, what is the initial pitch target?
+A: Rotate at ~3 deg/s toward 12.5 deg pitch attitude. Critical with high FLEX temperatures and low VR speeds.
+
+**T2.** Q: When does PM announce "ENGINE SECURE" after engine failure?
+A: After completing ECAM to: ENG MASTER OFF (no damage), AGENT 1 DISCH (damage), or fire extinguished/AGENT 2 DISCH (fire). Do not accelerate until engine is secured.
+
+**T3.** Q: A330 standard drift-down speed after engine failure in cruise?
+A: M 0.82/300 kt. Chosen to stay within stabilized windmill relight envelope.
+
+**T4.** Q: CPA policy for initial engine failure strategy in cruise?
+A: Obstacle strategy — target green dot speed to minimize descent rate and maintain highest level for terrain clearance. Unless operationally necessary to do otherwise.
+
+**T5.** Q: PF's immediate actions after engine failure in cruise — what 4 things simultaneously?
+A: (1) Set all thrust levers MCT, (2) Disconnect A/THR, (3) Set HDG and pull, (4) Determine recovery altitude + set speed/pull for OPEN DES. A/THR disconnected to prevent thrust reduction.
+
+**T6.** Q: WARNING about selecting TOGA after derated takeoff with engine failure?
+A: Selecting TOGA at speed below F speed can cause LOSS OF CONTROL. In CONF 1+F, F speed is NOT on PFD — only on FMS PERF TAKEOFF page.
+
+**T7.** Q: How does the beta target work after engine failure?
+A: Blue beta target replaces sideslip indicator on PFD. Normal Law commands some rudder automatically (no pedal feedback). Pilot must adjust rudder to CENTER beta target. Trim gradually. After AP engaged, RELEASE rudder pedals — maintaining pressure can cause AP disconnect.
+
+**T8.** Q: Signs of engine DAMAGE vs simple flameout?
+A: Damage: rapid EGT above redline, rotor speed mismatch/absence, significant vibrations, abnormal oil pressure/temp, hydraulic loss, repeated uncontrollable stalls. Flameout: rapid decrease in N1, N2/N3, EGT, and FF.
+
+**T9.** Q: A330 windmill relight for dual engine failure — key steps?
+A: Both master levers OFF for 30s (ventilate chambers). Both ON simultaneously. Thrust levers at IDLE. Target optimum windmill speed on ECAM (>260 kt). Monitor N3 and EGT. If fail, repeat.
+
+**T10.** Q: Starter-assisted relight — when and key rule?
+A: Below FL200, after windmill fails, APU bleed available. ONE ENGINE AT A TIME only — APU cannot bleed for two simultaneously. Green dot speed. 30s minimum per attempt.
+
+**T11.** Q: Engine stall — is it a memory item?
+A: NO. Take time to assess. Most FADECs self-recover. Procedure: stabilize trajectory → reduce affected engine to idle → check stability → if stable, slowly advance thrust. If stall recurs, maintain thrust below stall threshold.
+
+**T12.** Q: Engine tailpipe fire — what must you NOT do?
+A: Do NOT use ENG FIRE pb (cuts FADEC supply, stops dry crank). Do NOT use fire extinguisher (doesn't work on internal fire). Correct: shut down engine, then dry crank to ventilate.
+
+**T13.** Q: Engine fire — should normal parameters delay the fire procedure?
+A: NO. Engine parameters can remain normal in early stages of fire. Apply fire procedure without delay once confirmed by local warnings.
+
+**T14.** Q: After fire agent discharge, ENG FIRE disappears then ENG FIRE DET FAULT appears. Assessment?
+A: Fire NOT considered extinguished — detection system damaged by fire propagation. LAND ASAP still applies. Do not restart engine.
+
+**T15.** Q: OEI circling — landing weight above QRH max for CONF 3 gear down?
+A: Delay gear extension until established on final. Expect "L/G NOT DOWN" at 750 ft RA and "TOO LOW GEAR" at 500 ft RA. Fly higher circling pattern if weather permits.
+
+**T16.** Q: OEI go-around technique?
+A: Apply TOGA, immediate rudder for beta target. SRS engages (if flap ≥1). If SRS unavailable, target 12.5 deg pitch. At EO acceleration altitude, same technique as V1 failure.
+
+**T17.** Q: RTO below V1 — engine fails with rapid directional departure. Technique?
+A: ALL thrust levers IDLE (reduces asymmetry). Select ALL reversers regardless of which engine failed. Full rudder toward centerline. Symmetrical or differential braking. Below 72 kt: no ground spoilers, no autobrake — manual braking and rudder only.
+
+**T18.** Q: A330 forced landing (all engines failed) — braking technique?
+A: Accumulator only. Limit to 1,000 PSI (no anti-skid). Use rudder at high speed. Differential braking at low speed. AVOID releasing brakes — preserves accumulator endurance.
+
+**T19.** Q: One reverser inop — reverser management?
+A: Select reversers on ALL engines during RTO and landing (ENG REV FAULT may trigger). No reversers operative: do NOT select reverse, but set all thrust levers to IDLE detent.
+
+**T20.** Q: What is the 10-minute takeoff thrust limitation?
+A: TOGA/FLEX thrust is limited to 10 minutes. When LVR MCT flashes on FMA, set thrust levers to MCT. If levers already in FLX/MCT detent, move to CL first then back to MCT.
+
+---
+
+## SECTION U: A350 Engine System — Differences (20 cards)
+
+**U1.** Q: A350 initial pitch target after engine failure vs A330?
+A: A350: 10 deg. A330: 12.5 deg. Different aerodynamic characteristics.
+
+**U2.** Q: A350 standard drift-down speed vs A330?
+A: A350: M 0.85/300 kt. A330: M 0.82/300 kt. Trent XWB's higher cruise Mach capability.
+
+**U3.** Q: What 2 automatic systems activate on A350 dual engine failure that A330 doesn't have?
+A: (1) APU auto-starts, (2) Auto-relight launched on both engines. A330 requires manual crew action for both.
+
+**U4.** Q: A350 all-engines-failure ECAM asks what interactive question?
+A: "TIME PERMITS FOR FULL PROCEDURE?" YES = full procedure (windmill, starter-assisted, ditching/forced landing prep). NO = short procedure (equivalent to QRH EMER LANDING).
+
+**U5.** Q: A350 engine relight monitoring — what extra parameter vs A330?
+A: FF (fuel flow) in addition to N3 and EGT. Provides earlier confirmation of successful fuel ignition on Trent XWB.
+
+**U6.** Q: A350 ND features for diversion planning during all-engine failure?
+A: ROSE-NAV mode with ARPT option shows reachable airports. MFD F-PLN INFO provides closest airports list. Not available on A330.
+
+**U7.** Q: A350 OEI go-around pitch target if SRS unavailable?
+A: 10 deg (vs 12.5 deg on A330).
+
+**U8.** Q: A350 THR parameter at 0 — does this indicate engine damage?
+A: NO. THR = 0 should NOT be considered engine damage indication on A350. THR is a thrust indicator, not rotation indicator. A350-specific caveat.
+
+**U9.** Q: A350 ditching speed?
+A: VLS + 15 kt. When DITCHING pb set ON, VLS decreases (reduces kinetic energy). Increase flare height, maintain optimum pitch from ECAM until water contact.
+
+**U10.** Q: Flaps 1 extension time on A350-900 vs A350-1000 during forced landing?
+A: A350-900: FLAPS 1 = 2 min, FLAPS 2 = additional 1 min. A350-1000: FLAPS 1 = 2 min, FLAPS 2 = additional 2 min. L/G gravity = 1 min both variants.
+
+**U11.** Q: A350 engine vibrations — what unique preventive procedure exists?
+A: MISC ABNORM VIBRATIONS (ICING SUSPECTED) — a not-sensed procedure for low vibration levels before any alert triggers. Can be activated proactively. Not available on A330.
+
+**U12.** Q: A350 EO MAX FL display location vs A330?
+A: A350: MFD PERF page. A330: MCDU PROG page. Both show long-range cruise engine-out maximum FL.
+
+**U13.** Q: 30-second ventilation rule between relight attempts — same on both types?
+A: YES. Master levers OFF for minimum 30 seconds between attempts on both A330 and A350. Prevents engine stall, tailpipe fire, or unsuccessful relight.
+
+**U14.** Q: A350 engine fire procedure vs A330 — any significant difference?
+A: Identical in principle: apply without delay, don't be influenced by normal parameters, discharge agents while FIRE alert persists. Use AP to reduce workload. If DET FAULT replaces FIRE, assume fire not extinguished.
+
+**U15.** Q: A350 reverser management philosophy — same as A330?
+A: YES. One reverser operative: select reverse on ALL engines. No reverser: don't select reverse, set levers to IDLE detent.
+
+**U16.** Q: What Trent XWB specific oil monitoring does CPA use?
+A: DATUM oil quantity taken 5 hours after TOC. Subsequent hourly checks. If low oil expected on arrival, reduce CI to zero (reduces N3 rotor speed and oil consumption).
+
+**U17.** Q: A350 starter-assisted relight — same rule as A330?
+A: YES. One engine at a time only. APU bleed required. 30s minimum assessment per attempt. Green dot speed.
+
+**U18.** Q: On A350, what speed must be maintained during windmill relight attempts?
+A: Optimum windmill relight speed displayed on ECAM. Higher than green dot. If relight fails, reduce to green dot for maximum glide distance/time.
+
+**U19.** Q: A350 engine stall — how does anti-ice timing differ from A330?
+A: A350: anti-ice selected ON earlier (before checking parameter stability at idle). A330: anti-ice selected after confirming normal parameters at idle.
+
+**U20.** Q: A350 forced landing with only RAT — what configuration is available?
+A: With APU: slats and flaps available. Without APU (RAT only): only slats available via AC EMER 1 bus. Landing gear by gravity.
+
+---
+
+## SECTION V: Engine Failures — Sim Scenarios (20 cards)
+
+**V1.** Q: C2 sim — ENG 1 oil low pressure in descent. What actions?
+A: Check oil pressure and temperature on ENG SD page. If confirmed low with abnormal temp, potential engine damage. Follow ECAM. Plan possible engine shutdown. Declare PAN PAN, request priority, brief OEI approach. Autoland available OEI.
+
+**V2.** Q: C2 sim — engine failure after V1 on FLEX takeoff, aircraft not climbing as expected. What to consider?
+A: Confirm gear up. Consider advancing operative engine to TOGA for additional margin (not required for certification). WARNING: if DERATED (not FLEX), do NOT select TOGA below F speed. Follow SRS, center beta target, trim, engage AP when stable.
+
+**V3.** Q: Sim — dual engine flameout at FL370. First 60 seconds as captain?
+A: Fly: pitch for optimum windmill speed on ECAM (>260 kt). Navigate: identify nearest runway. Communicate: MAYDAY on VHF1. A350: note APU auto-starts + auto-relight launched. Thrust levers IDLE. Check fuel quantity — rule out fuel starvation before relight. PM performs ECAM.
+
+**V4.** Q: Sim — engine stall at cruise, FADEC self-recovers in 15 seconds. What do you do?
+A: Not a memory item — take time to assess. Since FADEC recovered, monitor parameters. Consider QRH procedure anyway: reduce to idle, check stability, slowly advance thrust. Suspect icing at high altitude. If stable, resume ops. Report to maintenance.
+
+**V5.** Q: T2 sim — APU inop, crossbleed engine start. What's the process?
+A: Start ENG 1 with Air Start Unit (ASU) on bay. Crossbleed start ENG 2: open crossbleed valve, use ENG 1 bleed to start ENG 2. Do NOT remove external power before ENG 2 start complete. Brief ISM on delayed safety briefing. Coordinate ASU availability with engineering early.
+
+**V6.** Q: Sim — engine fire on ground during taxi. Immediate actions?
+A: Stop aircraft, parking brake. ECAM fire procedure: throttle idle, master OFF, fire pb, agent 1. If fire persists: agent 2. Request fire services from ATC. If not extinguished or spreading: consider evacuation. Don't let normal parameters delay the procedure.
+
+**V7.** Q: C2 sim — ENG 2 wouldn't start, igniter problem. Options as captain?
+A: Discuss with engineering: can fault be fixed? Can we dispatch single engine (check MEL)? Alternative start source (crossbleed, ASU)? If unresolvable: coordinate with IOC for options. Time-box troubleshooting. If eventually started, monitor that engine closely throughout.
+
+**V8.** Q: OEI approach to VHHH ILS 25R — what specific considerations?
+A: Use autoland (available OEI) for max automation. Don't extend gear too early at high weights. Trim to keep slip centered. Consider resetting rudder trim before thrust reduction on final. On touchdown: aircraft yaws toward dead engine as live engine thrust is reduced.
+
+**V9.** Q: C1 sim — A/THR inop. How does this change engine failure management?
+A: ALL thrust management is manual. For engine failure: manually set MCT on operative engine. Alpha Floor LOST. Speed control is entirely PF's responsibility. Brief PM for enhanced thrust monitoring callouts. Soft G/A also lost — TOGA will be abrupt.
+
+**V10.** Q: TCAS RA during OEI climb. Thrust management consideration?
+A: Set TCAS to TA ONLY after engine failure to prevent RA commands compromising marginal climb performance. If RA received, must comply — but be aware of terrain implications during OEI climb.
+
+**V11.** Q: OEI go-around with required EO GA speed increase. Technique?
+A: Determine EO GA speed at dispatch. On G/A: TOGA, rudder, follow SRS. After gear up and above 150 ft RA, set and pull EO GA speed on FCU → disengages SRS, engages OP CLB. Level off at EO acceleration altitude.
+
+**V12.** Q: After engine fire, both agents discharged, FIRE light out then ENG FIRE DET FAULT. Decision?
+A: Fire NOT extinguished — detection system damaged. LAND ASAP. Engine stays secured. Divert nearest suitable. Request fire services on standby. Brief possible evacuation. Do NOT restart engine.
+
+**V13.** Q: C2 sim — ENG 1 bleed fault MEL + AIR L WING LEAK at FL200. Management?
+A: With ENG 1 bleed already MEL'd, operating on ENG 2 bleed only. Wing leak may require isolating remaining bleed → loss of pressurisation. Declare PAN PAN, expedite descent, emergency descent if cabin altitude rises. Land nearest suitable.
+
+**V14.** Q: Speed decaying rapidly at high FL near limiting weight OEI. Critical speed?
+A: Do NOT decelerate below green dot. Green dot = best L/D ratio, minimum safe OEI speed clean. Below green dot: drag increases rapidly, potentially unrecoverable descent. Initiate OP DES promptly.
+
+**V15.** Q: A330 hydraulic power after engine shutdown — how long available?
+A: Approximately 30 seconds. Plan engine shutdown timing accordingly for landing with abnormal systems.
+
+**V16.** Q: OEI ETOPS diversion — fuel decision framework?
+A: Consider: fixed speed strategy, distance to ETOPS alternate, single-engine cruise performance, anti-ice requirements, pressurisation (single bleed), time since equal-time point. EO MAX FL on PROG/PERF helps determine optimum level.
+
+**V17.** Q: After OEI, STATUS page appears. What should you do BEFORE reviewing it?
+A: First: complete acceleration flow (clean config, correct speed). Then: consider relighting engine if no damage observed. Only THEN review STATUS page. STATUS must not delay establishing stable OEI configuration.
+
+**V18.** Q: A/THR inop + windshear on approach. What's the brief?
+A: "At speed minus 10, I call TOGA." No Alpha Floor will auto-arrest speed decay. In TOGA with windshear: follow SRS bars, do NOT push nose down chasing speed. Highest risk combination in C1 sim.
+
+**V19.** Q: C2 sim — sequential failures: DU fail at 500ft, then engine oil pressure, then HYD degradation. Priority?
+A: AVIATE first — maintain safe flight path. Each failure gets ECAM treatment in sequence when workload permits. Don't rush. Delay non-urgent ECAMs. Brief OEI approach early if engine shutdown likely. Declare MAYDAY if multiple system degradation.
+
+**V20.** Q: What combustion chamber ventilation rule applies to ALL relight attempts on both A330 and A350?
+A: Master levers OFF for minimum 30 seconds between attempts. Failure to ventilate may cause engine stall, tailpipe fire, or unsuccessful relight. Both windmill and starter-assisted relights.
+
+---
+
+## SECTION W: A330 Fire & Smoke Procedures (20 cards)
+
+**W1.** Q: On the A330, what are the three entry paths into the SMOKE/FUMES/AVNCS SMOKE QRH procedure?
+A: (1) ECAM AVIONICS SMOKE caution, (2) Crew perception of smoke/fumes without ECAM warning, (3) Other ECAM smoke warning (e.g. LAVATORY SMOKE). Path 3 requires applying the displayed ECAM first; if doubt about origin, revert to the QRH SMOKE/FUMES/AVNCS SMOKE procedure.
+
+**W2.** Q: What is the main philosophy sequence of the A330 QRH SMOKE/FUMES/AVNCS SMOKE procedure?
+A: (1) Anticipate diversion (LAND ASAP), (2) Immediate actions (protect crew, limit contamination, communicate), (3) Decision point -- Q1: Is source immediately obvious, accessible and extinguishable? YES = isolate; NO = initiate diversion, then enter Smoke/Fumes Origin Identification and Fighting.
+
+**W3.** Q: On the A330, when must you initiate diversion for smoke/fumes?
+A: Immediately, if the source is not immediately obvious, accessible and extinguishable. Time is critical -- diversion must be anticipated as soon as smoke/fumes are detected, as indicated by LAND ASAP.
+
+**W4.** Q: What are the immediate actions for any A330 smoke/fumes event?
+A: (1) Flight crew protection -- don oxygen masks at crew discretion, but if in doubt all crew must don masks, (2) Avoid further contamination of cockpit/cabin -- CREW OXY MASK if required, use 100% and EMER, ventilation extract OFF, (3) Communication with cabin crew.
+
+**W5.** Q: On the A330, how can you distinguish probable smoke/fumes sources from odour alone?
+A: Acrid = electrical equipment or engine oil leak. Burning = galley equipment or bird ingestion. Chemical = contaminated bleed ducts or APU ingestion. Dirty socks = APU or engine oil leaks. Foul = lavatories. Fuel = APU FCU/fuel line. Skydrol = engine hydraulic. Sulphur = avionics filter water contamination or light bulb.
+
+**W6.** Q: On the A330, what are the three categories of suspected smoke/fumes source for procedure branching?
+A: (1) AIR COND SMOKE/FUMES SUSPECTED -- source from packs/bleed, (2) CAB EQUIPMENT SMOKE/FUMES SUSPECTED -- galley, IFE, lavatory etc., (3) AVNCS/ELECTRICAL SMOKE/FUMES SUSPECTED OR SOURCE CANNOT BE DETERMINED -- the most critical case, leads to electrical shedding.
+
+**W7.** Q: On the A330, what happens in paragraph 3 (AVNCS/Electrical smoke suspected or source not determined)?
+A: The procedure sheds one electrical side, then the other. If unsuccessful, the crew sets the electrical emergency configuration as the last means to isolate the smoke source. The ELEC EMER CONFIG ECAM then displayed is NOT to restore generators but to remain in emergency electrical configuration and restore generators before landing for a normal-configuration landing.
+
+**W8.** Q: On the A330, what are the "boxed items" in the smoke/fumes procedure?
+A: Three options available at ANY time during the procedure (but NOT before immediate actions): (1) Apply QRH REMOVAL OF SMOKE/FUMES, (2) Set electrical emergency configuration, (3) Consider immediate landing. They are applied when smoke/fumes become the greatest threat.
+
+**W9.** Q: On the A330, why must REMOVAL OF SMOKE/FUMES be applied BEFORE setting ELEC EMER CONFIG?
+A: In ELEC EMER CONFIG, manual cabin pressure control cannot be selected, so the REMOVAL OF SMOKE/FUMES procedure cannot be fully applied. Sequence matters: if smoke is the greatest threat, apply REMOVAL first, then ELEC EMER CONFIG if needed. The first step of REMOVAL initiates at current altitude; the procedure completes by FL100 during descent.
+
+**W10.** Q: On the A330, what triggers an ENG 1(2) FIRE alert and what is the correct response?
+A: The engine fire protection system detects fire and triggers ENG 1(2) FIRE. Apply the engine fire procedure without delay. Consider LAND ASAP and land as soon as possible at nearest airport where safe landing can be performed. Complete ALL steps and discharge agents even if fire appears out -- the ENG FIRE pb-sw red light stays illuminated until fire is extinguished regardless of pb position.
+
+**W11.** Q: On the A330, why should you not delay the engine fire procedure even if thrust and parameters look normal?
+A: Engine thrust and parameters can remain normal in the early stage of an engine fire. This must not influence the decision to apply the procedure. Complete all steps and discharge both agents as long as the ENG 1(2) FIRE alert and local warning remain.
+
+**W12.** Q: On the A330, when can you stop the engine fire procedure mid-way?
+A: Only if the ENG 1(2) FIRE alert and associated local warnings disappear after discharge of fire extinguisher (agent 1 or 1+2). In this case, stop the fire procedure and complete remaining ECAM procedures as usual.
+
+**W13.** Q: On the A330, what indicates possible fire propagation after engine fire procedure?
+A: If the ENG 1(2) FIRE alert disappears but is replaced by ENG 1(2) FIRE DET FAULT, suspect the fire is NOT successfully extinguished and damage to the detection system has occurred. LAND ASAP remains applicable.
+
+**W14.** Q: On the A330, what is the cargo smoke procedure philosophy?
+A: Cargo compartments are airtight and fireproof. Cargo ventilation prevents smoke reaching cockpit/cabin. The crew confirms SMOKE AFT(FWD) CRG SMOKE via the CARGO SMOKE panel. Agent discharge follows ECAM. The alert may remain after discharge because residual gases and extinguishing agent trigger detectors. Once isolation valves close, cargo temperature is unreliable.
+
+**W15.** Q: On the A330, what must ground crew NOT do after a cargo smoke event?
+A: Do NOT open the affected cargo compartment door unless passengers have disembarked and fire services are present. If SMOKE AFT(FWD) CRG SMOKE is displayed on ground with the cargo door open, do NOT initiate AGENT DISCHARGE -- request ground crew to investigate; the alert may be triggered by high humidity.
+
+**W16.** Q: On the A330, what is an engine tailpipe fire and how is it managed?
+A: A tailpipe fire occurs only at engine start or shutdown from excess fuel igniting in the combustion chamber/turbine/exhaust. It is an internal fire with no cockpit alert -- the only indication is rising EGT or visual detection by ground crew/ATC. Management: stop fuel flow (shutdown engine), dry crank to ventilate. Do NOT use ENG FIRE pb (cuts FADEC supply). Do NOT use fire extinguisher (cannot reach internal fire).
+
+**W17.** Q: On the A330, what is the EMER EVAC procedure and who decides?
+A: The Captain makes the evacuation decision. Tasksharing: F/O runs the QRH EMER EVAC; Captain builds the decision. "If evacuation required" is the Captain's decision gate. "EVACUATION...INITIATE" = notify cabin crew, activate EVAC COMMAND pb, advise ATC. Delta P must be zero. F/O can set ENG MASTERS OFF and push FIRE pbs without Captain confirmation.
+
+**W18.** Q: On the A330, what is the difference between LAND ASAP (red) and LAND ASAP (amber)?
+A: Red LAND ASAP = land at the NEAREST suitable airport -- urgency overrides preference. Amber LAND ASAP = land as soon as practical at a suitable airport, allowing time for better preparation. For fire/smoke, red LAND ASAP is typical. Do not fly past a suitable airport seeking better conditions.
+
+**W19.** Q: On the A330 in ELEC EMER CONFIG powered by RAT, what systems remain?
+A: FLY: PFD 1, alternate law. NAVIGATE: RMP 1, VOR 1, ILS 1/GPS 1 (if MMR installed). COMMUNICATE: VHF 1. AP, pitch/rudder trim unavailable. Out of trim in roll (right outboard aileron upfloat). Press LAND RECOVERY before approach: recovers ILS 1/SFCC slat channel. At slat extension, EMER GEN disconnects, landing on batteries. Landing: direct law, pedal braking without anti-skid.
+
+**W20.** Q: On the A330, how does lithium battery fire treatment differ from a standard fire?
+A: Fire extinguishers suppress flames but CANNOT stop thermal runaway. Treatment: cool the battery by pouring water or non-alcoholic liquid. PF wears oxygen mask, PM wears PBE (smoke hood). If flames: PM uses fire extinguisher first, then cool with liquid. Device must be immersed in container per CCOM STORAGE PROCEDURE AFTER A LITHIUM BATTERY FIRE. Monitor continuously for re-ignition.
+
+---
+
+## SECTION X: A350 Fire & Smoke -- Differences (20 cards)
+
+**X1.** Q: What is the A350 procedure called for cockpit/cabin smoke, and how does it differ from the A330 naming?
+A: The A350 uses the FIRE SMOKE / FUMES procedure (vs A330's SMOKE/FUMES/AVNCS SMOKE). The A350 also has a FIRE SMOKE / FUMES ABN not-sensed procedure that activates via ECAM, displaying LAND ASAP. After immediate actions, it directs the crew to apply the QRH SMOKE / FUMES procedure.
+
+**X2.** Q: On the A350, what are the three ECAM triggers that lead to the QRH SMOKE / FUMES procedure?
+A: (1) FIRE SMOKE / FUMES ABN not-sensed procedure, (2) FIRE SMOKE / FUMES ABN not-sensed from FCOM/PRO-ABN-FIRE, (3) SMOKE L(R) AVNCS SMOKE ECAM. Both the FIRE SMOKE / FUMES ABN and SMOKE L(R) AVNCS SMOKE request the QRH SMOKE / FUMES after immediate actions.
+
+**X3.** Q: On the A350, what is the smoke/fumes isolation sequence when NO AVNCS SMOKE ECAM is triggered?
+A: The QRH progresses: (1) Air conditioning system (first part of sub-section 03 -- AIR COND / CABIN EQPT ISOL), (2) Cabin equipment (second part of 03), (3) Isolate side 1 of the electrical network (first part of 04 -- ELEC ISOL SIDE 1 THEN SIDE 2), (4) Isolate side 2 (second part of 04). This follows most-probable to least-probable source order.
+
+**X4.** Q: On the A350, what happens when SMOKE L(R) AVNCS SMOKE ECAM is triggered?
+A: The flight crew directly isolates the affected side of the electrical network, shedding non-essential systems to isolate a potential electrical smoke source. If smoke continues, shed the OTHER side. If smoke still persists, consider air conditioning or cabin equipment sources and attempt isolation.
+
+**X5.** Q: On the A350, what are the QRH SMOKE / FUMES sub-sections the crew may enter?
+A: (1) 03 -- AIR COND / CABIN EQPT ISOL (smoke from air conditioning or cabin), (2) 04 -- ELEC ISOL SIDE 1 THEN SIDE 2 (avionics/electrical source, or SMOKE L AVNCS SMOKE detected), (3) 05 -- ELEC SIDE 2 THEN SIDE 1 (SMOKE R AVNCS SMOKE detected). The sub-section numbering is more structured than the A330 paragraph system.
+
+**X6.** Q: On the A350, what is the critical consequence of ELEC SIDE isolation on slat actuation?
+A: Isolation of one side can lead to total loss of slat actuation (Landing System LS 1 and LS 2 both lost in certain MEL combinations). Slats cannot extend, resulting in significantly higher approach speed. This is a major difference from A330 where slat channels are distributed differently.
+
+**X7.** Q: On the A350, how can you recover slat actuation after ELEC SIDE isolation?
+A: Set the GENs of the isolated side to ON before landing. This enables systems recovery including slat actuation and reduces approach speed. However, this may reignite the smoke source. The crew must weigh: risk of higher approach speed (no slats) vs risk of smoke recurrence.
+
+**X8.** Q: On the A350, what other system may be lost with ELEC SIDE isolation affecting approach capability?
+A: A landing system (e.g. ILS capability on one side) may be lost. If the diversion airport requires a low-visibility approach, recovering the isolated side before landing may be essential. Also consider: landing gear may need gravity extension if hydraulic pumps on the isolated side are affected.
+
+**X9.** Q: On the A350 ENG FIRE procedure, how does it compare to the A330?
+A: Essentially identical philosophy. ENG 1(2) FIRE triggered by fire protection system. Apply without delay. Consider LAND ASAP. Complete all steps and discharge agents. ENG FIRE pb-sw red light stays illuminated until fire extinguished. Fire propagation indicated by ENG FIRE replaced by ENG FIRE DET FAULT. Use autopilot in flight to reduce workload during thrust asymmetry.
+
+**X10.** Q: On the A350, what is the SMOKE / FIRE FROM LITHIUM BATTERY procedure?
+A: Dedicated to lithium battery fire suppression. Fire extinguishers work on flames but cannot stop thermal runaway. Treatment: cool with water or non-alcoholic liquid. PF contacts cabin crew to initiate CCOM STORAGE PROCEDURE AFTER A LITHIUM BATTERY FIRE (fill container, immerse device). If source is immediately identified as lithium battery, apply this QRH directly instead of the general FIRE SMOKE / FUMES procedure.
+
+**X11.** Q: On the A350, what is the respiratory protection protocol for cockpit fire with flames?
+A: PF wears oxygen mask (maintains flying duties). PM wears PBE (smoke hood) and uses fire extinguisher. Before discharging extinguisher, ensure crew respiratory protection is in place. After extinguishing: PM assesses if device can be removed. If attached by cable and non-removable, pour water/liquid on it and monitor continuously for thermal runaway restart.
+
+**X12.** Q: On the A350, when should the crew consider immediate landing during the fire/smoke procedure?
+A: At ANY time during the procedure if the situation becomes unmanageable. This is a boxed item available throughout. However, diversion/immediate landing/ditching should only be considered AFTER applying immediate actions. The distinction: immediate actions first, then the Captain may invoke immediate landing at any point.
+
+**X13.** Q: On the A350, how does the cabin crew coordination differ for smoke/fumes compared to A330?
+A: Same philosophy, slightly different wording. The cabin crew evaluates the situation and informs the flight crew about the density of smoke and the severity. On the A330, the cabin crew "estimates and informs" -- on the A350, they "evaluate the situation and inform." Operationally identical: the cabin report is critical for the Captain's decision-making.
+
+**X14.** Q: On the A350, what is the cargo fire suppression system architecture?
+A: Halon fire suppression with two phases: (1) Initial bottle -- high-concentration Halon discharge to knock down the fire rapidly, (2) Metered (low-rate) bottles -- maintain suppression concentration over an extended period. The ECAM procedure directs agent discharge. After discharge, SMOKE alert may persist due to residual gases and extinguishing agent triggering detectors. Cargo isolation valves close; temperature readings become unreliable.
+
+**X15.** Q: On the A350, what is the critical timeline consideration for cargo fire diversion?
+A: After the initial Halon bottle knocks down the fire, the metered bottles maintain suppression for a limited duration. The crew MUST plan to land within the metered agent endurance time. Factors: distance to diversion airport, descent profile, approach time, possible go-around fuel. LAND ASAP applies -- do not overfly a suitable airport. The cargo compartment remains sealed; temperature is unreliable, so fire status is unknown.
+
+**X16.** Q: On the A350, what happens to flight controls after setting ELEC EMER CONFIG?
+A: Aircraft reverts to alternate law with reduced protections. AP and A/THR may be unavailable depending on power source (EDP vs RAT). LAND RECOVERY pb should be pressed before approach to recover ILS and slat/flap channels. Manual flight may be required with reduced envelope protection. Expect direct law after landing gear extension.
+
+**X17.** Q: On the A350, what is the key decision when considering restoring generators before landing?
+A: Setting GENs to ON before landing enables systems recovery (slats, ILS, landing system) but may reignite the smoke/fumes source. Decision factors: (1) Was smoke successfully eliminated? (2) Approach speed impact without slats, (3) Weather at diversion airport, (4) ILS availability needed for approach. The FCTM advises careful consideration -- this is a captain's judgement call.
+
+**X18.** Q: On the A350, how does the FIRE SMOKE / FUMES ABN not-sensed procedure work?
+A: When visibility in the cockpit is sufficient, the crew reads the ECAM which activates the ABN not-sensed procedure and displays LAND ASAP. After immediate actions, ECAM requests QRH SMOKE / FUMES. If visibility is insufficient to read ECAM, the crew goes directly to the QRH SMOKE / FUMES procedure. The ECAM procedure must not be cleared at this time.
+
+**X19.** Q: On the A350, during FIRE SMOKE / FUMES procedure, what happens if additional ECAM alerts trigger?
+A: Some isolation action steps may trigger new ECAM alerts. The crew must acknowledge these ECAM alerts and delay the ECAM actions until the end of the QRH SMOKE / FUMES procedure. Do not interrupt the smoke procedure to address cascading ECAMs -- complete the QRH smoke procedure first.
+
+**X20.** Q: On the A350, what structural difference makes the smoke procedure more systematic than the A330?
+A: The A350 uses numbered sub-sections (03, 04, 05) for isolation steps, making progression from air conditioning to cabin equipment to electrical shedding clearly delineated. The A350 also distinguishes SMOKE L vs SMOKE R AVNCS SMOKE, directing side-specific electrical isolation (04 for left-side first, 05 for right-side first). The A330 uses paragraph numbers (1, 2, 3) with less explicit side-specific direction.
+
+---
+
+## SECTION Y: Fire/Smoke -- Sim Scenarios (20 cards)
+
+**Y1.** Q: C3 sim -- Aft Cargo Smoke ECAM in cruise. ISM reported strange smell in aft galley earlier. What is the expected sequence?
+A: ISM call is the cue. Shortly after, ECAM AFT CARGO SMOKE triggers. Follow ECAM: agent discharge, cargo isolation. No hesitation -- divert immediately. Candidates report diverting to ZSPD 34R. FO flies the descent and handles ATC while Captain manages ECAM, coordinates with cabin and IOC. Key: cargo smoke is NOT perceptible from the cockpit; the CARGO SMOKE panel confirms the alert.
+
+**Y2.** Q: In a C3 cargo smoke diversion, what is the correct Captain vs FO tasksharing?
+A: Captain: declares PAN PAN or MAYDAY, makes diversion decision, manages ECAM procedure (PM duties), coordinates with ISM and IOC, makes evacuation decision on arrival. FO: flies the aircraft (PF), handles ATC communications, navigates to diversion airport. Do NOT take over as PF unless operationally necessary -- managing the situation IS the Captain's job.
+
+**Y3.** Q: After cargo smoke diversion and landing, should you open the cargo door?
+A: NO. Do not open the affected cargo compartment door until passengers have disembarked AND fire services are present. On ground with door open, do not initiate further agent discharge -- let fire services investigate. Brief ISM: prepare cabin for disembarkation, consider evacuation preparedness on landing.
+
+**Y4.** Q: C3 sim -- After cargo smoke diversion landing, what factors drive the evacuation decision?
+A: Captain's decision based on: (1) Is fire contained or visible externally? (2) Fire services available and positioned? (3) Cabin report from ISM -- any smoke/fumes in cabin? (4) Structural integrity. If in doubt, evacuate. "If evacuation required" is the decision gate. F/O can set ENG MASTERS OFF and push FIRE pbs without Captain confirmation per EMER EVAC tasksharing.
+
+**Y5.** Q: In the sim, you get ENG 1(2) FIRE during cruise. What is the common trap?
+A: Hesitating because engine parameters appear normal. The FCTM explicitly warns that thrust and parameters can remain normal in the early stage of fire. Apply the procedure WITHOUT DELAY. Do not wait for parameter confirmation. Complete ALL steps and discharge both agents. Use autopilot -- it reduces workload and enables safe handling of thrust asymmetry.
+
+**Y6.** Q: In the sim, after discharging both engine fire agents, the ENG FIRE light remains on. What now?
+A: LAND ASAP remains applicable. If ENG FIRE alert is replaced by ENG FIRE DET FAULT, suspect fire has damaged the detection system and is likely NOT extinguished. Land at the nearest suitable airport. Consider overweight landing if necessary -- do not delay for fuel burn. Declare MAYDAY if not already done.
+
+**Y7.** Q: C1/C2 sim -- ENG FIRE on ground after landing. How does this differ from in-flight?
+A: The ENG FIRE (ON GROUND) procedure includes EMER EVAC. Key sequence: stop aircraft, parking brake ON, ATC notify, CABIN CREW ALERT, Delta P check zero, then Captain decision. If evacuating: ENG MASTERS OFF, ALL FIRE pbs PUSH, ALL AGENT discharge AS RQRD, EVACUATION INITIATE. The Captain must decide rapidly -- do not delay for unnecessary checks.
+
+**Y8.** Q: In the sim, smoke/fumes source is not immediately obvious. What is the priority?
+A: Do NOT waste time identifying the source before acting. Sequence: (1) Immediate actions -- don O2 masks if any doubt, (2) IMMEDIATELY anticipate diversion (LAND ASAP), (3) THEN enter source identification and isolation portion of QRH. The FCTM states: if source cannot be immediately identified, initiate diversion BEFORE entering smoke origin identification.
+
+**Y9.** Q: In the sim (A330), you get AVIONICS SMOKE. What is the electrical procedure progression?
+A: Enter paragraph 3 of QRH. Shed one electrical side, then the other. If unsuccessful, set ELEC EMER CONFIG. The ECAM displayed for voluntarily-set ELEC EMER CONFIG is NOT to restore generators -- remain in emergency config. Restore generators BEFORE landing for normal electrical configuration. Key trap: do not rush to restore generators while smoke persists.
+
+**Y10.** Q: In the sim (A350), you get SMOKE L AVNCS SMOKE. What differs from the A330 approach?
+A: The A350 ECAM directly isolates the affected (left) side, shedding non-essential systems immediately. If smoke continues, shed the other side. This is different from A330 paragraph 3 which progressively sheds sides. The A350 approach is more targeted. Watch for: loss of slat actuation (LS 1 + LS 2) requiring higher approach speed unless GENs are restored before landing.
+
+**Y11.** Q: In a sim smoke scenario, when should you don oxygen masks?
+A: If you have ANY doubt, don masks immediately. The FCTM says: "If required, or in the case that the flight crew are not sure, all flight crew members must don the oxygen mask." Common debrief criticism: candidates wait too long. Don masks during immediate actions, set 100%/EMER if dense smoke. Communicate using intercom after donning.
+
+**Y12.** Q: In the sim, what is the PBE usage protocol when there are flames in the cockpit?
+A: PF wears oxygen mask (continues flying). PM wears PBE (smoke hood) and fights the fire with extinguisher. Before discharging: ensure both crew members' respiratory protection is in place. After extinguishing: PM assesses if device can be removed. Removable = hand to cabin crew for immersion in water container. Non-removable = pour water/liquid on it and monitor.
+
+**Y13.** Q: In the sim, smoke enters from cockpit ventilation outlets. What source should you suspect?
+A: Suspect AIR COND SMOKE -- from packs or bleed system. Could indicate engine or APU failure with smoke entering via bleed. After ENG/APU failure, smoke may re-circulate until it disappears from the air conditioning system. Watch for cascade: multiple ECAM smoke alerts (cargo, lavatory, avionics) may trigger in quick succession -- apply each displayed ECAM procedure.
+
+**Y14.** Q: C3 sim -- bomb threat leads to diversion and evacuation. How does this differ from fire/smoke evacuation?
+A: Bomb threat uses ABN checklist, not fire/smoke procedures, but evacuation is the same EMER EVAC. Candidates report diverting to ZSPD or ZHCC. Key difference: bomb threat evacuation focuses on getting people AWAY from aircraft (upwind, 300m distance). Fire/smoke evacuation focuses on avoiding the fire/smoke side. Both require Delta P zero check and Captain decision gate.
+
+**Y15.** Q: In the sim, how should you brief the ISM during a smoke/fumes diversion?
+A: Contact ISM with: (1) Nature -- smoke/fumes detected, diverting, (2) Destination -- [airport], ETA [X] minutes, (3) Preparation -- prepare cabin for emergency landing, (4) Cabin crew -- brief for possible evacuation, (5) Request -- report any smoke/fumes observations (density, location, increasing/decreasing). Good cockpit-cabin coordination is a key FCTM element and a common examiner assessment point.
+
+**Y16.** Q: In the sim, you are applying ELEC EMER CONFIG for smoke on the A330. What sequence error must you avoid?
+A: Applying ELEC EMER CONFIG before REMOVAL OF SMOKE/FUMES. In ELEC EMER CONFIG, manual cabin pressure control cannot be selected, blocking the REMOVAL procedure. Correct sequence: REMOVAL OF SMOKE/FUMES first (if smoke is the greatest threat), then ELEC EMER CONFIG if needed. Examiners test this sequence awareness.
+
+**Y17.** Q: In the sim, what considerations apply to diversion airport selection for fire/smoke?
+A: (1) Nearest suitable (red LAND ASAP = nearest, not best), (2) Runway length for possible overweight landing, (3) Fire services (RFFS category), (4) Weather -- but do NOT fly past a suitable airport for better weather, (5) Approach aids -- critical if ELEC SIDE isolation degraded ILS, (6) Cargo fire: land within metered Halon agent endurance time.
+
+**Y18.** Q: C3 sim scenario -- after aft cargo smoke diversion to ZSPD, an explosion occurs at 1500 ft. What happens?
+A: Candidates report: forward cargo door blows off and engine fails with airframe damage. Secure the failed engine immediately (ENG FIRE/FAIL procedure). Continue the approach and land on the remaining engine -- do NOT attempt a go-around with structural damage. EVAC on the runway. This tests rapid prioritisation: fly the aircraft first, manage the engine, then evacuate.
+
+**Y19.** Q: In the sim, when should you declare PAN PAN vs MAYDAY for fire/smoke?
+A: PAN PAN = urgency, situation under control (fumes with source isolated, smoke eliminated). MAYDAY = distress, immediate danger (uncontrolled fire, worsening smoke, cargo fire with unknown containment, engine fire). The FCTM states for ELEC EMER CONFIG: "This is a serious emergency and ATC should be notified using appropriate phraseology (MAYDAY)." When in doubt, declare MAYDAY -- it can always be downgraded.
+
+**Y20.** Q: What are the top 5 debrief points examiners emphasise in fire/smoke sim scenarios?
+A: (1) Speed of decision -- LAND ASAP means NOW, do not hesitate to divert, (2) Don O2 masks early -- if in doubt, don them immediately, (3) Follow the procedure systematically -- do not skip steps or jump ahead, (4) Correct tasksharing -- Captain manages the situation, FO flies, (5) Cabin coordination -- brief ISM early with clear, specific instructions. Additional common points: do not restore generators while smoke persists, do not delay landing to burn fuel, and always complete engine fire procedure including both agent discharges.
+
+---
+
+## SECTION Z: A330 Pressurisation & Decompression (20 cards)
+
+**Z1.** Q: How many Cabin Pressure Controllers (CPCs) does the A330 have, and how do they operate?
+A: Two CPCs, operating in active/standby configuration. One CPC actively controls cabin pressure while the other monitors on standby. They automatically swap roles each flight. If the active CPC fails, the standby takes over automatically.
+
+**Z2.** Q: What is the A330 maximum cabin differential pressure?
+A: 8.6 psi (normal operating differential). The safety valves (outflow valve relief function) open at approximately 9.0 psi to protect the fuselage structure.
+
+**Z3.** Q: What is the nominal cabin altitude when the A330 cruises at FL410?
+A: Approximately 7,850 ft to 8,000 ft cabin altitude (within the maximum design cabin altitude of 8,000 ft at maximum differential pressure).
+
+**Z4.** Q: How many outflow valves does the A330 have and where are they located?
+A: One outflow valve, located in the aft lower fuselage. It is electrically controlled by the CPCs and has a mechanical safety (spring-loaded) backup to prevent excessive differential pressure.
+
+**Z5.** Q: What are the A330 safety/relief valves for pressurisation?
+A: Two positive pressure relief valves (open at approximately 9.0 psi delta-P to prevent over-pressurisation) and one negative pressure relief valve (prevents fuselage negative differential during descent). The outflow valve itself also has a relief function.
+
+**Z6.** Q: At what cabin altitude does the CAB PR EXCESS CAB ALT warning trigger on the A330?
+A: The ECAM warning triggers when cabin altitude exceeds approximately 9,550 ft (with rate confirmation logic). This is a RED warning requiring immediate action.
+
+**Z7.** Q: At what cabin altitude do the passenger oxygen masks automatically deploy?
+A: At approximately 14,000 ft cabin altitude. An independent pressure switch triggers deployment. The flight crew can also manually deploy masks by pressing the MASK MAN ON pb on the overhead panel.
+
+**Z8.** Q: If CAB PR EXCESS CAB ALT triggers ABOVE FL 160, what is the correct sequence?
+A: First apply the EMER DESCENT memory items, THEN perform the ECAM procedure (the first ECAM steps recall the memory items). Priority is getting the descent started before reading the ECAM.
+
+**Z9.** Q: If CAB PR EXCESS CAB ALT triggers BELOW FL 160, what is the correct sequence?
+A: Apply the ECAM procedure and initiate a normal descent. No memory items required because the aircraft is already at a survivable cabin altitude.
+
+**Z10.** Q: What are the A330 EMER DESCENT memory items (PF actions)?
+A: (1) CREW OXY MASKS -- USE, (2) EMER DESCENT -- INITIATE (press and turn HDG knob to desired heading, pull SPD knob to select speed, set ALT to target altitude, push V/S or engage OP DES), (3) FMA -- ANNOUNCE, (4) If A/THR not active: ALL THR LEVERS -- IDLE, (5) SPEED BRAKES -- FULL.
+
+**Z11.** Q: What are the A330 EMER DESCENT memory items (PM actions)?
+A: (1) CREW OXY MASKS -- USE, (2) SIGNS -- ON (seatbelt and no-smoking), (3) FMA -- CHECK (confirm PF has established descent correctly).
+
+**Z12.** Q: What is the approximate rate of descent during emergency descent on the A330 (IDLE thrust, high speed, speed brakes extended)?
+A: Approximately 6,000 ft/min. From FL 410 to FL 100 takes approximately 5 minutes and 40 NM.
+
+**Z13.** Q: What is the target altitude for an emergency descent?
+A: FL 100 (or MEA/MORA if higher). Below FL 100, limit rate of descent to approximately 1,000 ft/min except during approach phase. The crew should use MORA displayed on ND (highest MORA within 40 NM radius).
+
+**Z14.** Q: What is the Time of Useful Consciousness (TUC) at various flight levels?
+A: FL 430: 5-9 seconds. FL 400: 9-12 seconds. FL 350: 15-30 seconds. FL 300: 1-2 minutes. FL 250: 3-5 minutes. FL 220: 5-10 minutes. These are for rapid decompression; slow decompression gives more time but may go unnoticed.
+
+**Z15.** Q: How long does the A330 crew oxygen last at normal operating altitude?
+A: Crew oxygen supply lasts a minimum of approximately 13 minutes at altitudes above FL 350 (with diluter demand set to 100%). Duration increases at lower altitudes. Sufficient for descent to FL 100.
+
+**Z16.** Q: How long does the A330 passenger chemical oxygen generator supply last?
+A: Approximately 12-22 minutes depending on generator type. Generators are one-time-use chemical units that produce oxygen by chemical reaction once activated by pulling the mask down.
+
+**Z17.** Q: How do you recognise a slow/gradual decompression on the A330?
+A: Symptoms: cabin altitude climbing gradually, cabin V/S positive (climbing) on ECAM CAB PRESS page, possible ear discomfort, possible fogging. May not trigger EXCESS CAB ALT warning until cabin altitude reaches threshold. Cross-check cabin altitude trend on ECAM system display page regularly in cruise.
+
+**Z18.** Q: What is OEB57 on the A330, and why is it critical?
+A: OEB57 addresses an internal CPC failure where the active CPC displays an erroneous (normal-looking) cabin altitude on CAB PRESS SD page, while actual cabin altitude is excessive. The standby CPC detects the real abnormal altitude and triggers CAB PR EXCESS CAB ALT. Critical lesson: apply the ECAM procedure even if CAB PRESS page looks normal -- do NOT disregard the alert.
+
+**Z19.** Q: If you suspect structural damage during decompression, what two specific actions must you take?
+A: (1) Set SPEED/MACH pb to SPEED to prevent IAS increase or to reduce speed, minimising stress on aircraft structure. (2) Carefully use speed brakes to avoid additional stress on aircraft structure. Structural damage clues: loud bang and/or high cabin vertical speed.
+
+**Z20.** Q: After completing the emergency descent and removing oxygen masks, what must the crew do?
+A: (1) Close the oxygen stowage mask compartment. (2) Press the PRESS TO RESET oxygen control slide to deactivate the mask microphone and cut off the oxygen flow. This ensures no oxygen leaks into the cockpit creating a fire hazard.
+
+---
+
+## SECTION AA: A350 Pressurisation -- Differences (20 cards)
+
+**AA1.** Q: What is the fundamental difference between A350 and A330 pressurisation air supply?
+A: The A350 uses a no-bleed architecture. Cabin air is supplied by electrically-driven Cabin Air Compressors (CACs), not engine bleed air. This is more fuel-efficient and eliminates bleed-related contamination risk. Only engine start and wing anti-ice use bleed air.
+
+**AA2.** Q: What replaces the bleed air packs on the A350 for pressurisation?
+A: Electric Environmental Control System (ECS) with electrically-driven Cabin Air Compressors (CACs). Two independent ECS packs, each with a CAC, supply conditioned air to the cabin. They are powered by the aircraft electrical system.
+
+**AA3.** Q: How many outflow valves does the A350 have versus the A330?
+A: The A350 has two outflow valves (one forward, one aft) compared to the A330's single aft outflow valve. This provides redundancy and better pressure distribution.
+
+**AA4.** Q: What is the A350 maximum cabin altitude at FL 410?
+A: Approximately 6,400 ft. The A350 composite fuselage allows a lower cabin altitude than the A330 (approximately 7,850-8,000 ft), significantly improving passenger comfort at high altitude.
+
+**AA5.** Q: What is the A350 maximum differential pressure?
+A: Approximately 9.4 psi, higher than the A330's 8.6 psi. The composite fuselage structure tolerates a greater pressure differential, enabling the lower cabin altitude at high cruise altitudes.
+
+**AA6.** Q: What unique emergency descent feature does the A350 have that the A330 does not?
+A: The AUTO EMER DESCENT function. Pressing the EMER DESCENT pb on the SPEED BRAKE panel and extending speed brakes engages an automatic descent targeting MORA with an envelope margin (MORA_dISA/dP displayed on AFS CP), which is higher than the grid MORA on the ND.
+
+**AA7.** Q: How does the A350 AUTO EMER DESCENT target altitude work?
+A: It targets MORA with an envelope margin (MORA_dISA/dP) higher than the grid MORA value on the ND. If MORA decreases after level-off, the AUTO EMER DESCENT can automatically rearm and reengage, performing multiple descent steps until the aircraft reaches 10,000 ft.
+
+**AA8.** Q: How do you disengage the A350 AUTO EMER DESCENT mode?
+A: A PULL or PUSH action on the ALT knob will disengage EMER DES mode and remove the AUTO FLT EMER DESCENT procedure from the WD. The crew can also adjust the altitude target during descent at any time.
+
+**AA9.** Q: What happens on the A350 if crew do NOT react to excessive cabin altitude?
+A: A 15-second countdown is initiated when an excessive cabin altitude is predicted. If the flight crew is not able to initiate an emergency descent within that 15 seconds, the AUTO EMER DESCENT function will automatically engage at the end of the countdown.
+
+**AA10.** Q: What are the two emergency descent techniques available on the A350?
+A: (1) AUTO EMER DESCENT function (press EMER DESCENT pb then extend speed brakes). (2) Selected guidance on AFS CP (manually select HDG/TRK, ALT, SPD -- same concept as A330). Choice depends on systems availability and PF's discretion.
+
+**AA11.** Q: What are the A350 EMER DESCENT memory items using the AUTO EMER DESCENT function (PF)?
+A: (1) CREW OXY MASKS -- USE, (2) EMER DESCENT -- INITIATE, (3) AUTO EMER DESC -- ARM, (4) SPD BRK LEVER -- FULL, (5) FMA -- ANNOUNCE, (6) If A/THR not active: ALL THR LEVERS -- IDLE.
+
+**AA12.** Q: What are the A350 EMER DESCENT memory items using selected guidance on AFS CP (PF)?
+A: (1) CREW OXY MASKS -- USE, (2) EMER DESCENT -- INITIATE, (3) ALT -- TURN, PULL, (4) HDG -- TURN, PULL, (5) SPD -- PULL, (6) FMA -- ANNOUNCE, (7) If A/THR not active: ALL THR LEVERS -- IDLE, (8) SPEED BRAKES LEVER -- FULL.
+
+**AA13.** Q: What are the A350 EMER DESCENT PM memory items?
+A: (1) CREW OXY MASKS -- USE, (2) SIGNS -- ON, (3) FMA -- CHECK (confirm PF has correctly established descent). Same priority as A330: PM monitors FMA to verify correct descent is established.
+
+**AA14.** Q: How does the A350 CAB PRESS EXCESS CAB ALT procedure differ from the A330 CAB PR EXCESS CAB ALT?
+A: Same decision logic: above FL 160 apply EMER DESCENT memory items first then ECAM; below FL 160 apply ECAM and normal descent. Key difference is the A350 offers AUTO EMER DESCENT as an additional technique, plus the 15-second automatic engagement if crew do not react.
+
+**AA15.** Q: What advantage does the A350 composite fuselage provide regarding decompression?
+A: The composite fuselage is more resistant to fatigue cracking than aluminium, reducing the risk of rapid decompression from structural fatigue. However, if structural failure does occur, composite behaviour differs from metal (no crack-stopping features), so decompression could be sudden and large.
+
+**AA16.** Q: On the A350, how does loss of both CACs (both ECS packs) affect pressurisation?
+A: Loss of both CACs means total loss of conditioned air supply. The cabin will gradually depressurise (slow decompression). Ram air ventilation via the RAM AIR valve is available as backup but does not pressurise the cabin. Emergency descent to a breathable altitude is required.
+
+**AA17.** Q: What is displayed on the A350 AFS CP during AUTO EMER DESCENT?
+A: The MORA_dISA/dP target altitude is displayed on the AFS CP altitude window. The FMA shows EMER DES mode engaged. The crew should monitor this to confirm correct descent engagement.
+
+**AA18.** Q: What is the A350 crew oxygen system type and approximate duration?
+A: Gaseous oxygen from a high-pressure cylinder, similar to A330. Minimum duration approximately 13 minutes above FL 350 (at 100% oxygen demand). The oxygen mask has diluter demand and 100% modes, plus emergency pressure mode for smoke/fumes scenarios.
+
+**AA19.** Q: On the A350, what extra caution applies when pressing MASK MAN ON pb?
+A: Same as A330: press MASK MAN ON if cabin altitude exceeds 14,000 ft or when it is obvious it will exceed 14,000 ft (can press before reaching 14,000 ft). This manually deploys passenger masks. The independent pressure switch will auto-deploy at 14,000 ft regardless.
+
+**AA20.** Q: Below FL 100 after emergency descent, what rate of descent limit applies on the A350?
+A: Limit rate of descent to 1,000 ft/min or less, except during the approach phase. Same as A330. This prevents passenger ear discomfort and allows crew to assess the situation and plan the approach.
+
+---
+
+## SECTION AB: Pressurisation -- Sim Scenarios (20 cards)
+
+**AB1.** Q: During cruise at FL 390, you hear a loud bang and cabin altitude is climbing rapidly. What are your immediate actions?
+A: Don crew oxygen masks (100% and Emergency if smoke), initiate EMER DESCENT memory items (HDG/SPD/ALT select, THR IDLE, SPD BRK FULL), PM sets SIGNS ON, checks FMA. Suspect structural damage due to loud bang -- set SPEED/MACH to SPEED and use speed brakes carefully. Descend to FL 100/MEA and declare MAYDAY.
+
+**AB2.** Q: You get CAB PR EXCESS CAB ALT at FL 370 but the CAB PRESS page shows normal cabin altitude (6,200 ft). What do you do and why?
+A: This is the OEB57 scenario. The active CPC is displaying an erroneous value. Apply the ECAM procedure regardless -- the standby CPC detected the real excessive cabin altitude. Do NOT disregard the warning based on the apparently normal display. Initiate EMER DESCENT memory items first (above FL 160), then ECAM.
+
+**AB3.** Q: You are PF on the A350 and get CAB PRESS EXCESS CAB ALT at FL 410. You choose to use AUTO EMER DESCENT. Walk through your actions.
+A: (1) Don crew oxygen mask, (2) Press EMER DESCENT pb on SPEED BRAKE panel, (3) Arm AUTO EMER DESC, (4) Extend speed brakes FULL, (5) Confirm FMA shows EMER DES engaged, announce to PM, (6) If A/THR not active: THR levers IDLE. PM: mask on, SIGNS ON, check FMA. Aircraft will automatically descend to MORA_dISA/dP. Monitor and adjust altitude target as needed.
+
+**AB4.** Q: Both crew are incapacitated during a decompression at FL 400 on the A350. What system protects the aircraft?
+A: The 15-second countdown. When excessive cabin altitude is predicted and the flight crew does not initiate emergency descent within 15 seconds, the AUTO EMER DESCENT function automatically engages and descends the aircraft to the MORA target altitude.
+
+**AB5.** Q: You are at FL 350 and notice cabin altitude slowly climbing through 7,000 ft with a positive cabin V/S. No ECAM yet. What do you suspect and what actions do you take?
+A: Suspect slow/gradual decompression. Cross-check cabin differential pressure trend. Check bleed/pack status (A330) or CAC/ECS status (A350). Consider requesting lower altitude from ATC. If cabin altitude continues to rise uncontrollably, prepare for EMER DESCENT. Do not wait for the ECAM -- be proactive. Advise cabin crew.
+
+**AB6.** Q: At what cabin altitude should you manually deploy passenger oxygen masks if the automatic system has not activated?
+A: Press MASK MAN ON at 14,000 ft cabin altitude. You may press it earlier if it is obvious cabin altitude will exceed 14,000 ft. Do not wait -- passenger TUC at 14,000 ft is approximately 15-20 minutes but decreases rapidly above that.
+
+**AB7.** Q: During emergency descent, TCAS issues an RA. What do you do?
+A: Follow the RA. TCAS mode selector must remain on TA/RA position throughout the emergency descent. Avoidance of collision has priority, even if it requires a temporary interruption of the descent manoeuvre. TA/RA mode enables maximum protection against collision. Resume descent after clear of conflict.
+
+**AB8.** Q: You complete the emergency descent and level at FL 100. What is the maximum rate of descent below FL 100?
+A: Approximately 1,000 ft/min, except during the approach phase. This prevents excessive cabin rate of descent causing passenger discomfort and potential ear injury, and allows time for situation assessment.
+
+**AB9.** Q: After emergency descent and levelling at FL 100, you remove your oxygen mask. What two actions must you perform?
+A: (1) Close the oxygen stowage mask compartment (A330) / crew oxygen stowage box (A350). (2) Press the PRESS TO RESET slide (A330) / PRESS TO TEST AND RESET pb (A350) to deactivate the mask microphone and cut off oxygen. Prevents oxygen leak fire hazard.
+
+**AB10.** Q: In the sim, you get CAB PR EXCESS CAB ALT at FL 120 (below FL 160). How does your response differ from a high altitude event?
+A: No EMER DESCENT memory items required. Apply the ECAM procedure directly and initiate a normal descent. No need for speed brakes full, no need for emergency rate of descent. Continue descent to safe altitude, troubleshoot pressurisation per ECAM.
+
+**AB11.** Q: You are descending in an emergency descent and approaching high terrain. What reference do you use for minimum altitude on the A330 vs A350?
+A: A330: MORA displayed on ND (highest MORA within 40 NM radius). A350: MORA on ND plus safety altitude on VD (MORA or MSA along aircraft trajectory within VD range). A350 AUTO EMER DESCENT targets MORA_dISA/dP automatically (with safety margin built in).
+
+**AB12.** Q: What is the significance of the speed brake caution during emergency descent at high altitude?
+A: At high flight levels with speed brakes extended, monitor VLS carefully. Speed brakes extended at low speed/high altitude can trigger the angle-of-attack protection, which may cause automatic retraction of speed brakes and AP disconnection. Ensure adequate speed margin above VLS.
+
+**AB13.** Q: You are PM during a rapid decompression. The PF initiates descent. What is your single most important monitoring task during memory items?
+A: Focus on monitoring the FMA to ensure the PF has correctly established the aircraft in descent. Confirm correct mode engagement (OP DES/V/S, selected HDG/TRK, speed target). Only after confirming descent is established should you move to ECAM actions.
+
+**AB14.** Q: A sim scenario gives you a pack failure in cruise on the A330 (single pack operation). How does this affect pressurisation?
+A: Single pack can maintain pressurisation but with reduced margin. Maximum altitude may be limited (check QRH/ECAM for altitude limitation with single pack). Cabin altitude will be higher for a given flight level. Monitor cabin altitude trend closely. If second pack also fails, pressurisation is lost entirely.
+
+**AB15.** Q: In the sim, you have both packs failed on the A330. What happens to the cabin?
+A: Total loss of pressurised air supply. Cabin altitude will climb toward aircraft altitude (slow decompression). RAM AIR valve can provide ventilation below FL 100 but does not pressurise. Emergency descent to FL 100 or below is mandatory. Apply ECAM and consider EMER DESCENT if cabin altitude is rising uncontrollably.
+
+**AB16.** Q: You lose pressurisation over the Himalayas with terrain above FL 150. What are your key considerations?
+A: MORA/MSA will be well above FL 100. Descend to lowest safe altitude considering terrain. Use MORA on ND. Extended time at high cabin altitude -- passenger oxygen generators have limited duration (12-22 minutes). May need to route toward lower terrain urgently. Crew oxygen must be managed. Consider diversion to nearest suitable airport with lower terrain en route.
+
+**AB17.** Q: What is the CX procedure for crew oxygen mask use in smoke/fumes versus decompression?
+A: Decompression: mask on, select NORMAL (diluter demand) or 100% as needed. Smoke/fumes: mask on, select 100% AND press EMER (emergency pressure) to create positive pressure in the mask preventing smoke ingress. Goggles on for smoke. Both scenarios: test mask seal, establish communication via mask microphone.
+
+**AB18.** Q: In the sim, during emergency descent the ECAM shows CAB PR SYS 1+2 FAULT (dual CPC failure on A330). What pressurisation action is required for landing?
+A: With both CPCs failed, automatic pressure control is lost. During final approach, set MAN V/S CTL switch to FULL UP position to cancel any residual cabin pressure. For EMER EVAC, an additional delta-P check is required (residual pressure sensor indicator is inhibited when slides are armed).
+
+**AB19.** Q: A sim scenario: you are at FL 350 and cabin altitude is 9,000 ft and climbing at 500 ft/min. No ECAM warning yet. What key decision must you make?
+A: Do not wait for the ECAM. If cabin altitude and rate of climb are excessive and not controllable, initiate emergency descent by flight crew decision. The FCTM states the crew should initiate EMER DESCENT if they identify a depressurisation event. A 500 ft/min climb rate will reach EXCESS CAB ALT threshold and 14,000 ft mask deployment within minutes. Act early.
+
+**AB20.** Q: What are the three ways to identify a depressurisation event on the A330 per the FCTM?
+A: (1) Cabin altitude and rate of climb that are excessive and not controllable. (2) Triggering of the CAB PR EXCESS CAB ALT alert. (3) All oxygen masks dropping down in the cabin (triggered by independent pressure switch). Note: partial extension of masks from mechanical failure of some oxygen containers does not count. Cabin crew should inform flight crew when masks drop.
+
+---
+
+*500 flashcards compiled from CX FOP OPS Part A Rev 69, OMD Rev 49, A330/A350 FCOM/FCTM, MEL, QRH, OEB57, and 125+ candidate simulator debriefs.*
 
 </script>
 
