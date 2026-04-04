@@ -1143,6 +1143,9 @@ const SECTIONS = {
   K: "A330 Electrical System — Operations",
   L: "A350 Electrical System — Operations",
   M: "Electrical Failures — Sim Scenarios",
+  N: "A330 Hydraulic System — Operations",
+  O: "A350 Hydraulic System — Operations",
+  P: "Hydraulic Failures — Sim Scenarios",
 };
 
 const TOPIC_GROUPS = [
@@ -1150,6 +1153,7 @@ const TOPIC_GROUPS = [
   { name: "Flight Operations", icon: "✈️", sections: ["C", "D", "E", "F"] },
   { name: "Airbus — General", icon: "🔧", sections: ["I", "J"] },
   { name: "Electrical System", icon: "⚡", sections: ["K", "L", "M"] },
+  { name: "Hydraulic System", icon: "🔴", sections: ["N", "O", "P"] },
 ];
 
 let allCards = [];
@@ -1575,7 +1579,7 @@ window.addEventListener('DOMContentLoaded', () => {
 <!-- Embedded flashcard data (parsed on load) -->
 <script type="text/plain" id="flashcardData">
 # CX Captain Upgrade — Flashcards
-## 260 Questions Organized by Topic
+## 320 Questions Organized by Topic
 
 ---
 
@@ -2411,7 +2415,201 @@ A: Electrical equipment or IFE (primary), or engine oil leak.
 
 ---
 
-*260 flashcards compiled from CX FOP OPS Part A Rev 69, OMD Rev 49, A330/A350 FCOM/FCTM, MEL, QRH, and 125+ candidate simulator debriefs.*
+---
+
+## SECTION N: A330 Hydraulic System — Operations (20 cards)
+
+**N1.** Q: How many hydraulic systems does the A330 have and at what pressure?
+A: 3 systems — Green, Blue, Yellow — at 3,000 psi.
+
+**N2.** Q: What does the Green hydraulic system power?
+A: Flight controls, landing gear extension/retraction, normal braking (anti-skid), NWS, stabiliser, Engine 1 reverser, some spoilers, slats/flaps (shared).
+
+**N3.** Q: What does the Yellow hydraulic system power?
+A: Flight controls (shared), flaps (primary), some spoilers/slats, alternate braking (anti-skid available), Engine 2 reverser.
+
+**N4.** Q: What does the Blue hydraulic system power?
+A: Flight controls (shared), slats (primary), some spoilers/flaps, Engine 1 reverser (shared).
+
+**N5.** Q: Is a single hydraulic failure a major event on the A330?
+A: No. "Single hydraulic failures have very little effect on handling but will cause degradation of landing capability to CAT 3 SINGLE."
+
+**N6.** Q: A330 dual hydraulic failure — is it an emergency?
+A: YES. Red LAND ASAP displayed. Declare MAYDAY. AP lost. Alternate Law. Hand-flown approach required.
+
+**N7.** Q: A330 G+B failure — what elevator(s) remain?
+A: Right elevator only.
+
+**N8.** Q: A330 G+Y failure — what elevator(s) remain?
+A: Left elevator only.
+
+**N9.** Q: A330 B+Y failure — what elevator(s) remain?
+A: Both elevators available. But stabiliser is inoperative (autotrim via elevators still works).
+
+**N10.** Q: In A330 B+Y failure, why use gravity extension even though Green (normal gear) works?
+A: To preserve Green hydraulic pressure for flight controls. The FCTM explicitly directs gravity extension.
+
+**N11.** Q: A330 G+B failure — what braking is available?
+A: Accumulator only. Anti-skid INOPERATIVE. Limit to 1,000 PSI. Parking brake may be inoperative after stop.
+
+**N12.** Q: A330 G+Y failure — what braking is available?
+A: Alternate braking (Yellow). Anti-skid AVAILABLE.
+
+**N13.** Q: A330 B+Y failure — what braking is available?
+A: Normal braking (Green). Anti-skid AVAILABLE.
+
+**N14.** Q: Is NWS available in ANY A330 dual hydraulic failure?
+A: NO. NWS is inoperative in all three dual failure combinations.
+
+**N15.** Q: Can landing gear be retracted after gravity extension?
+A: NO. Once extended by gravity, gear cannot be retracted. Go-around must be with gear down.
+
+**N16.** Q: Should you manually select HYD ELEC PUMP ON during dual hydraulic failure?
+A: NO. Electric pump flow = only 18% of EDP. Can cause flight control jerk. Only use temporarily to retract spoilers that remain out.
+
+**N17.** Q: RAT flow varies between what percentage of an EDP?
+A: Between 15% and 45%, depending on aircraft speed. At low speed, the RAT stalls.
+
+**N18.** Q: A330 accumulator braking technique — can you pump the brakes?
+A: NO. Apply and hold. Do not release. Each release depletes the finite accumulator. Use rudder at high speed, differential braking at low speed.
+
+**N19.** Q: A330 Loss of Braking memory item — what are the 3 steps?
+A: (1) Release brake pedals, (2) PM sets A/SKID & N/W STRG switch OFF, (3) Press brake pedals ONLY AFTER switch is OFF. Limit to 1,000 PSI.
+
+**N20.** Q: In A330 all engines failure, what hydraulic systems remain?
+A: Green only via RAT. Blue and Yellow are lost. RAT provides 15-45% of EDP flow.
+
+---
+
+## SECTION O: A350 Hydraulic System — Operations (20 cards)
+
+**O1.** Q: How many hydraulic systems does the A350 have and at what pressure?
+A: 2 systems — Green and Yellow — at 5,000 psi. There is NO Blue system.
+
+**O2.** Q: Why does the A350 use higher hydraulic pressure than the A330?
+A: Higher pressure (5,000 vs 3,000 psi) allows smaller, lighter actuators for the same force output — key to weight reduction.
+
+**O3.** Q: What is an EHA (Electro-Hydrostatic Actuator)?
+A: A self-contained actuator with its own electric motor, hydraulic pump, and reservoir. Requires NO external hydraulic supply. Activates automatically when associated hydraulic system pressure is lost.
+
+**O4.** Q: What is an EBHA (Electrical Backup Hydraulic Actuator)?
+A: A hybrid actuator — uses system hydraulics normally, but has an integrated electric motor/pump that activates automatically when hydraulic supply is lost.
+
+**O5.** Q: Where are EHAs fitted on the A350?
+A: Ailerons and selected spoilers — as backup to conventional hydraulic actuation.
+
+**O6.** Q: Where are EBHAs fitted on the A350?
+A: Rudder actuators and selected spoilers/roll spoilers.
+
+**O7.** Q: In A350 dual hydraulic failure, are flight controls lost?
+A: NO. EHAs and EBHAs activate automatically using electrical power. Meaningful pitch, roll, and yaw control is maintained. This is the key difference from A330.
+
+**O8.** Q: A350 RAT function — hydraulic or electrical?
+A: Primarily ELECTRICAL. The A350 RAT generates electricity to power EHAs/EBHAs. Unlike A330 where RAT powers Blue hydraulic circuit.
+
+**O9.** Q: A350 dual HYD failure — what approach capability?
+A: APPR1 only. AP available down to CAT I minimum. No autoland.
+
+**O10.** Q: A350 dual HYD failure — what braking is available?
+A: Alternate braking with anti-skid via brake accumulator. BTV is lost. Autobrake mode (BRK MED) remains available.
+
+**O11.** Q: A350 dual HYD failure — NWS status?
+A: Both primary NWS and Backup Steering Function (BSF) are LOST. Towing required to vacate runway.
+
+**O12.** Q: A350 dual HYD failure — accumulator braking technique?
+A: Brake as required WITHOUT RELEASING to ensure accumulator endurance. Do not pump brakes.
+
+**O13.** Q: What is BSF (Backup Steering Function) on the A350?
+A: Yellow-powered backup nose wheel steering. Available when Green NWS fails but Yellow is serviceable. Lost if Yellow fails.
+
+**O14.** Q: What is BTV (Brake-to-Vacate)?
+A: Sophisticated autobrake mode that targets a selected runway exit for deceleration. Lost in dual HYD failure — reverts to BRK MED.
+
+**O15.** Q: What is ROW/ROP on the A350?
+A: ROW = Runway Overrun Warning (alert). ROP = Runway Overrun Protection (auto max braking if overrun imminent). Both remain active even if BTV lost.
+
+**O16.** Q: A350 normal braking uses which hydraulic systems?
+A: BOTH Green and Yellow. This differs from A330 where Green powers normal braking.
+
+**O17.** Q: A350 landing gear in dual HYD failure — normal or gravity extension?
+A: Gravity/free-fall extension. Gear doors mechanically lock open. 3 green lights confirms downlocked.
+
+**O18.** Q: After A350 gravity gear extension, can you retract for go-around?
+A: NO. Go-around must be flown with gear down. One good approach is preferable.
+
+**O19.** Q: Why is A350 dual hydraulic failure MORE survivable than A330?
+A: EHAs/EBHAs maintain meaningful flight control on electrical power alone. A330 relies entirely on hydraulic actuators — dual failure = severely limited control.
+
+**O20.** Q: A350 Loss of Braking memory item — steps?
+A: (1) Release brake pedals completely, (2) PM sets ANTI SKID switch OFF, (3) Press brake pedals ONLY AFTER switch is OFF. Pressure automatically limited. If still no braking: PARK BRK ON at low speed.
+
+---
+
+## SECTION P: Hydraulic Failures — Sim Scenarios (20 cards)
+
+**P1.** Q: C2 sim — most common A350 hydraulic MEL?
+A: 29-20-01A Green Electric Motor Pump. Complete ops procedure BEFORE engine start.
+
+**P2.** Q: C2 sim — most common A330 hydraulic MEL?
+A: 29-20-03A Blue HYD Electric Pump. If first flight of day, must motor engine at gate to pressurize Blue system.
+
+**P3.** Q: C2 sim — HYD Y Low Level appears on descent. What do you expect?
+A: Possible dual HYD failure developing. Declare PAN PAN initially. Prepare for manual braking, gravity gear extension, NWS loss. May escalate to dual HYD failure with missed approach.
+
+**P4.** Q: C2 sim — after missed approach, gear not uplocked. What is this?
+A: Major emergency — hydraulic degradation caused gear abnormality. Gravity extension procedure, full emergency, landing distance assessment critical.
+
+**P5.** Q: C3 sim — what hydraulic/brake MEL appears in almost EVERY session?
+A: Autobrake inop (32-42-27A on A350, 32-42-04A on A330). Manual braking on contaminated/snowy runway.
+
+**P6.** Q: C3 sim — Autobrake inop + Ground Spoiler fault on A350. What capability is lost?
+A: BTV lost, APPR 1 only for entire flight, no autoland capability. Dispatch LPA required (PADD items).
+
+**P7.** Q: C3 sim — contaminated runway with autobrake inop. What's the braking technique?
+A: Full manual braking. On snow/ice, moderate steady pedal pressure. Avoid harsh braking that could lock wheels. Rudder for directional control at high speed, differential braking at low speed.
+
+**P8.** Q: C2 sim — Blue HYD Electric Pump MEL on A330, first flight of day. What must you do?
+A: Motor the engine at the gate to pressurize Blue HYD before departure. Otherwise a brake check is required.
+
+**P9.** Q: A330 dual HYD failure — what speeds should you use for approach?
+A: SELECTED speeds on FCU. Managed speed is not available in Alternate Law.
+
+**P10.** Q: A330 dual HYD failure — when should you be configured for landing?
+A: Early stabilised approach. Fully configured at FAF. STATUS page reading essential before approach.
+
+**P11.** Q: Landing with abnormal gear — should you arm ground spoilers?
+A: NO. Ground spoilers NOT armed — need roll authority for maintaining wings level. Autobrake also NOT used.
+
+**P12.** Q: Landing with one main gear not extended — anti-skid status?
+A: Anti-skid must be switched OFF (reference speed not correctly initialised with asymmetric gear).
+
+**P13.** Q: Landing with abnormal gear — engine shutdown timing if nose gear abnormal?
+A: Engine master OFF BEFORE nose impact.
+
+**P14.** Q: Landing with abnormal gear — engine shutdown timing if one main gear abnormal?
+A: Failed side engine OFF after main gear touchdown. Other engine OFF before nacelle touchdown.
+
+**P15.** Q: A330 — hydraulic power remains for how long after engine shutdown?
+A: Approximately 30 seconds.
+
+**P16.** Q: A350 — can you do a go-around after dual HYD failure?
+A: Yes — EHA/EBHA flight controls remain available. But gear stays down (gravity extended) and you face same landing challenges again.
+
+**P17.** Q: A350 — what does BTV revert to at 300 ft if landing runway disagrees?
+A: BRK MED on FMA. "BTV/LDG RWY DISAGREE" appears on ANF.
+
+**P18.** Q: When should you request towing during approach?
+A: If NWS is lost (dual HYD failure), request towing early in approach — allows ground coordination before landing.
+
+**P19.** Q: A330 — with accumulator braking only, what parking brake limitation?
+A: Parking brake may be inoperative after stopping (G+B failure — low Blue accumulator pressure). Use chocks.
+
+**P20.** Q: C2 sim — wipers gotcha with gear retraction?
+A: Brief PM explicitly to retract wipers with gear. Frequently forgotten during departure in rain.
+
+---
+
+*320 flashcards compiled from CX FOP OPS Part A Rev 69, OMD Rev 49, A330/A350 FCOM/FCTM, MEL, QRH, and 125+ candidate simulator debriefs.*
 
 </script>
 
