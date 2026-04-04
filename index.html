@@ -1146,6 +1146,9 @@ const SECTIONS = {
   N: "A330 Hydraulic System — Operations",
   O: "A350 Hydraulic System — Operations",
   P: "Hydraulic Failures — Sim Scenarios",
+  Q: "A330 Flight Control Laws",
+  R: "A350 Flight Control Laws — Differences",
+  S: "Autoflight & FMA — Operations",
 };
 
 const TOPIC_GROUPS = [
@@ -1154,6 +1157,7 @@ const TOPIC_GROUPS = [
   { name: "Airbus — General", icon: "🔧", sections: ["I", "J"] },
   { name: "Electrical System", icon: "⚡", sections: ["K", "L", "M"] },
   { name: "Hydraulic System", icon: "🔴", sections: ["N", "O", "P"] },
+  { name: "Flight Controls & Autoflight", icon: "🛩️", sections: ["Q", "R", "S"] },
 ];
 
 let allCards = [];
@@ -1579,7 +1583,7 @@ window.addEventListener('DOMContentLoaded', () => {
 <!-- Embedded flashcard data (parsed on load) -->
 <script type="text/plain" id="flashcardData">
 # CX Captain Upgrade — Flashcards
-## 320 Questions Organized by Topic
+## 380 Questions Organized by Topic
 
 ---
 
@@ -2609,7 +2613,201 @@ A: Brief PM explicitly to retract wipers with gear. Frequently forgotten during 
 
 ---
 
-*320 flashcards compiled from CX FOP OPS Part A Rev 69, OMD Rev 49, A330/A350 FCOM/FCTM, MEL, QRH, and 125+ candidate simulator debriefs.*
+---
+
+## SECTION Q: Flight Control Laws — A330 (20 cards)
+
+**Q1.** Q: What does Normal Law pitch axis command on the A330?
+A: Load factor demand (C* law). Sidestick commands g, not pitch attitude. Neutral stick = 1g. Autotrim is fully active — no stick force needed.
+
+**Q2.** Q: Normal Law load factor limits?
+A: +2.5g / -1.0g (clean), +2.0g / 0g (flaps extended). Hard limits — cannot be exceeded even with full stick.
+
+**Q3.** Q: Normal Law bank angle limits?
+A: >33°: must hold stick to maintain. Maximum 67° with full sidestick deflection. Auto-recovery if stick released above 33°.
+
+**Q4.** Q: What is Alpha Protection?
+A: When AoA reaches alpha prot, sidestick becomes AoA demand. Full back stick commands alpha max — the aircraft CANNOT stall in Normal Law.
+
+**Q5.** Q: What is Alpha Floor and when does it trigger?
+A: Automatic TOGA thrust when AoA exceeds alpha floor threshold (below alpha prot speed). Activates regardless of thrust lever position. Available from liftoff to 100 ft RA.
+
+**Q6.** Q: What is TOGA Lock and how do you recover?
+A: After Alpha Floor, thrust locks at TOGA (FMA shows TOGA LK). Recovery: press instinctive disconnect (I/D) pushbutton. Thrust reverts to manual at TLA position.
+
+**Q7.** Q: What protections are LOST in Alternate Law?
+A: Alpha protection, alpha floor, load factor protection, bank angle protection, pitch attitude protection, high-speed protection. LSS (Low Speed Stability) + aural stall warning replace alpha protection.
+
+**Q8.** Q: What is LSS (Low Speed Stability)?
+A: In Alternate Law, when speed decreases toward stall, a nose-down tendency is introduced. It is NOT a hard protection — pilot can override it. Aural stall warning also activates.
+
+**Q9.** Q: Speed scale change: Normal Law vs Alternate Law — what replaces alpha prot?
+A: In Normal Law: alpha prot displayed (amber/green boundary). In Alternate Law: alpha prot REMOVED, VLS becomes the primary low speed reference. Stall warning is aural ("STALL" + cricket).
+
+**Q10.** Q: What is MAN PITCH TRIM ONLY?
+A: Displayed on PFD when both elevators are lost. Pitch controlled only via THS trim wheel. A/THR should be disconnected. Approach in CONF 2 only — NOT CONF 3 or FULL.
+
+**Q11.** Q: F/CTL STAB CTL FAULT — what happens and what do you do?
+A: Pitch reverts to Alternate Law. Autotrim remains via SEC. ECAM asks to check manual trim. If available: "TRIM FOR NEUTRAL ELEV" — move trim wheel to center elevator on F/CTL SD page.
+
+**Q12.** Q: "TRIM FOR NEUTRAL ELEV" — which direction do you turn the trim wheel?
+A: If elevators are UP: trim wheel NOSE UP direction. If elevators are DOWN: trim wheel NOSE DOWN direction. Target: elevator indicator shows neutral on F/CTL SD page.
+
+**Q13.** Q: ELEV REDUND LOST — what is the 12° aileron preset?
+A: On 2nd failure (e.g., Green HYD + PRIM 2), ailerons preset 12° upward. This anticipates pitch-up from potential 3rd failure. Increases fuel burn ~16%. Cancelled below 2,000 ft or in CONF 2.
+
+**Q14.** Q: A330 mechanical backup — what do you have?
+A: THS trim wheel (pitch) + rudder (yaw). No mechanical aileron or elevator. These are the absolute last resort when all FBW is lost.
+
+**Q15.** Q: No Flaps No Slats landing — key technique?
+A: Flap handle in CONF 1 (enables SRS for G/A). At 500 ft: reduce to VLS-5 kt. HIGH pitch attitude — tail strike risk. Only small pitch adjustment in flare. No prolonged float.
+
+**Q16.** Q: What happens to the A330 CG warning during ELEV REDUND LOST?
+A: DISREGARD it. The CG warning is erroneous — caused by THS position counteracting pitch-up, which confuses the FE computer. CG from FCMC on ECAM is reliable.
+
+**Q17.** Q: In dual hydraulic failure, what flight control law are you in?
+A: Alternate Law. AP lost. FDs and A/THR remain. Must use selected speeds on FCU (managed speed not available).
+
+**Q18.** Q: After engine failure, what does the blue beta target on PFD mean?
+A: Sideslip target replacing normal sideslip indicator. Normal Law commands some rudder for sideslip, but no feedback to pedals. Pilot must apply rudder to center the beta target.
+
+**Q19.** Q: Why should you NOT select CONF 3 or FULL in MAN PITCH TRIM ONLY?
+A: Degraded handling characteristics. CONF 2 provides adequate approach performance with better controllability when only THS trim is available for pitch.
+
+**Q20.** Q: In Alternate Law, what is the VMO/MMO protection status?
+A: HIGH-SPEED PROTECTION IS LOST. Pilot must manually avoid exceeding VMO/MMO. Aural overspeed warning still present but no automatic nose-up tendency.
+
+---
+
+## SECTION R: Flight Control Laws — A350 Differences (20 cards)
+
+**R1.** Q: A350 flight control computer architecture vs A330?
+A: A350: 3 PRIM + 2 SEC (no FAC — FAC functions absorbed into PRIM). A330: 2 ELAC + 3 SEC + 2 FAC.
+
+**R2.** Q: A350 has no mechanical backup. What replaces it?
+A: Electrical Backup via EHA/EBHA actuators. These are self-contained electric-hydraulic units that operate without aircraft hydraulic supply. No rudder cables, no THS mechanical trim.
+
+**R3.** Q: On A350, what happens to flight controls when GEN 1A + GEN 1B are set OFF (electrical isolation)?
+A: F/CTL degrades to Alternate Law. Stabilizer LOCKS. AP sidestick locking device lost. Rudder pedal locking device lost. Major A350-specific coupling — no equivalent on A330.
+
+**R4.** Q: A350 sidestick with AP engaged — how does it differ from A330?
+A: A350 sidesticks are LOCKED IN NEUTRAL when AP engaged (tactile feedback). A330 sidesticks are NOT locked with AP engaged. This is a new tactile awareness feature.
+
+**R5.** Q: Does CPA A350 have active sidestick (backdriveable)?
+A: NO. CPA A350 has passive (conventional) sidesticks — "no physical interconnection" confirmed in FCTM. Active sidestick is an option for future variants.
+
+**R6.** Q: What is AUTO EMER DESCENT on the A350?
+A: Automated emergency descent function — if excessive cabin altitude detected and crew hasn't reacted within 15 seconds, aircraft automatically initiates descent. Not available on A330.
+
+**R7.** Q: A350 triple ADR failure — what law?
+A: Direct Law. Both PFDs display backup speed and backup altitude. Same end-state as A330 but backup is electrical, not mechanical.
+
+**R8.** Q: On A350, alpha floor is a function of which computer?
+A: PRIM (not FAC as on A330). Losing all PRIMs = losing alpha floor. Different system dependency.
+
+**R9.** Q: A350 autoland categories?
+A: LAND2 (1 AP) = CAT I. LAND3 SINGLE (1 AP) = CAT III single. LAND3 DUAL (2 AP) = CAT IIIb (lowest minimums).
+
+**R10.** Q: After A350 hydraulic failure, what autoland capability remains?
+A: APPR1 only (CAT I). AP may be used down to CAT I minimum. CAT II/III not available.
+
+**R11.** Q: A350 EFB integration for abnormal landing performance — how does it work?
+A: ECAM failure message AUTOMATICALLY populates the EFB landing performance app. Crew must verify correct failure message appears. EFB computes LD and FACTORED LD.
+
+**R12.** Q: A350 VMO/MMO and VD/MD?
+A: VMO = 340 kt / MMO = M 0.89. VD/MD = 375 kt / M 0.96. Overspeed beyond VMO may cause loads exceeding limits — maintenance inspection required.
+
+**R13.** Q: A350 rudder structural caution — what must you NEVER do?
+A: Never apply sudden, full or almost full, opposite rudder pedal inputs. These can induce loads above limit loads and cause structural damage. Rudder travel limitation is NOT designed to prevent this.
+
+**R14.** Q: A350 HUD — what is the primary reference for approach?
+A: FPV (Flight Path Vector). HUD replaces conventional attitude reference with flight path reference. Declutter once visual. Stow HUD during cruise.
+
+**R15.** Q: A350 HUD takeoff — why can't you use FPV initially?
+A: The 12.5° rotation pitch target is outside the HUD FOV (~5° above horizon). Fly by pitch bars until FPV captures, then transition to FPV.
+
+**R16.** Q: When should you abandon HUD on A350?
+A: TCAS RA events and unusual attitude recoveries — use PFD instead. HUD FPV has lag in dynamic manoeuvres.
+
+**R17.** Q: A350 PRIM reset — how?
+A: Via cockpit PRIM pushbutton (confirmed FCTM AOP-30). Unlike A330 where ELAC/SEC/FAC reset buttons are on overhead panel.
+
+**R18.** Q: A350 electrical isolation effect vs A330 — key CCQ risk?
+A: On A330: electrical failure → mechanical backup survives (rudder + THS). On A350: electrical failure → Alternate Law + stabilizer locked. GEN isolation is a MAJOR F/CTL event on A350.
+
+**R19.** Q: A350 Not-Sensed procedures — what must you NOT do?
+A: Must NOT activate a Not-Sensed procedure merely to review or discuss it. Activating causes avionics (including FWS alerting) to reconfigure.
+
+**R20.** Q: A350 low energy "SPEED SPEED SPEED" — what triggers it at cruise?
+A: Speed decay at high altitude with AP on. AP maintains altitude at expense of speed → high AoA. Recovery: increase thrust AND/OR pitch down. Do NOT select OP DES (reduces thrust to idle).
+
+---
+
+## SECTION S: Autoflight & FMA — Operations (20 cards)
+
+**S1.** Q: Before engaging AP, what 3 things must you do?
+A: (1) Fly the aircraft on the intended path, (2) Check FMA — confirm FD engaged with appropriate modes, (3) Center the FD bars with aircraft symbol.
+
+**S2.** Q: What happens if you engage AP while large FD corrections are needed?
+A: AP overshoot of intended flight path — large pitch/roll changes and thrust variations that can surprise the crew.
+
+**S3.** Q: A/THR is active when thrust levers are where?
+A: Between IDLE and CLB detent. Beyond CLB (MCT/TOGA range): thrust is manual, A/THR is ARMED (blue on FMA).
+
+**S4.** Q: Best method to disconnect A/THR?
+A: Instinctive Disconnect (I/D) pushbutton. First: return thrust levers to approximately current thrust (observe TLA symbol), then press I/D. Minimizes thrust discontinuity.
+
+**S5.** Q: What happens if you disconnect A/THR via the FCU A/THR pushbutton?
+A: THR LK (amber) — thrust FREEZES at current value. Dangerous. Must move thrust levers out of detent to recover manual control. Only use if I/D is inoperative.
+
+**S6.** Q: FDs are ON but you're not following them. What should you do?
+A: Turn FDs OFF. If FDs are ON but not followed, A/THR may be in thrust mode instead of SPEED mode, causing speed control issues.
+
+**S7.** Q: "RETARD" callout — when does it occur?
+A: At 20 ft RA (10 ft in autoland). Prompts thrust levers to IDLE for landing.
+
+**S8.** Q: One engine inop — A/THR thrust lever position?
+A: Operative engine thrust lever(s) set to MCT detent for remainder of flight. A/THR active between IDLE and MCT (CLB no longer available single-engine).
+
+**S9.** Q: CX engine failure cruise strategy — which is default?
+A: OBSTACLE strategy (drift down at green dot speed for maximum terrain clearance). When clear of obstacles, revert to standard. CX policy explicitly states this.
+
+**S10.** Q: FMA Golden Rule — what must you always do?
+A: Monitor, Announce, Confirm, Understand the FMA at ALL times. "What is the aircraft expected to fly NOW? What NEXT?"
+
+**S11.** Q: A/THR with manual thrust recommended — when?
+A: When autotrim is lost (MAN PITCH TRIM ONLY). Large thrust changes create pitch moments. Without autotrim, each thrust change requires manual retrim — A/THR variability makes this difficult.
+
+**S12.** Q: Engine failure after V1 — what is SRS?
+A: Speed Reference System. Engages at liftoff, targets V2 to V2+15 kt range. Follow SRS pitch bars. Do NOT push nose down chasing speed.
+
+**S13.** Q: Engine failure climb — when to set thrust levers to MCT?
+A: When "LVR MCT" message flashes on FMA. Set thrust levers to MCT detent. FMA then shows THR MCT.
+
+**S14.** Q: AP engaged during engine failure — what about rudder?
+A: AP manages rudder trim — manual rudder trim is INHIBITED. Release rudder pedal pressure. If rudder pressure maintained, AP may disengage.
+
+**S15.** Q: A/THR inop (C1 sim MEL 22-30-01) — what protections are lost?
+A: Alpha Floor lost (no automatic TOGA on stall approach). Soft G/A mode lost. No FMA thrust modes. Manual thrust monitoring required throughout.
+
+**S16.** Q: A/THR inop + windshear — what's the critical risk?
+A: Speed decay will NOT auto-arrest. No Alpha Floor protection. Brief: "At speed minus 10, I call TOGA." In TOGA with windshear: follow SRS bars, do NOT push nose down.
+
+**S17.** Q: C1 sim — FMGEC 2 fails. What cascades?
+A: FMS 2, AP 2, FD 2, and A/THR all may be affected. Each must be individually MEL'd. Captain manages manual thrust on remaining system.
+
+**S18.** Q: C2 sim — Captain Inner DU fails at 500 ft. FMA impact?
+A: PF may lose direct FMA visibility. Pre-brief: "If my DU fails in climb, you call ALL FMA changes until I reposition." Use OIS or outer DU.
+
+**S19.** Q: C3 sim — PRIM 2 + AP2 + Ground Spoiler MEL stack. What's the FMA consequence?
+A: APPR 1 only (no LAND 3). BTV lost. Autobrake may be affected. FMA will not arm LAND 3. Brief manual landing with degraded deceleration.
+
+**S20.** Q: When following FD in manual flight, what 2 questions must you always answer?
+A: (1) What is the aircraft expected to fly NOW? (2) What is the aircraft expected to fly NEXT? If unsure: select the desired target (pull knob), or disengage AP and fly manually.
+
+---
+
+*380 flashcards compiled from CX FOP OPS Part A Rev 69, OMD Rev 49, A330/A350 FCOM/FCTM, MEL, QRH, and 125+ candidate simulator debriefs.*
 
 </script>
 
